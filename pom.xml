@@ -8,16 +8,57 @@
     <artifactId>robot-2017</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!--Project Properties (For plugin Variables)-->
     <properties>
         <teamNumber>5689</teamNumber>
     </properties>
 
+    <!-- Plugin repositories -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>CKCyberPack-Maven</id>
+            <url>https://ckcyberpack.github.io/Maven-repo/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!--Java Repository-->
     <repositories>
         <repository>
-            <id>riobuild-maven-plugin</id>
-            <url>https://raw.github.com/CKCyberPack/Maven-Repo/riobuild/</url>
+            <id>FRC-Maven</id>
+            <url>http://first.wpi.edu/FRC/roborio/maven/release/</url>
         </repository>
     </repositories>
+
+    <!--Dependency on Library Go here-->
+    <dependencies>
+        <!--FRC WPILib-->
+        <dependency>
+            <groupId>edu.wpi.first.wpilibj</groupId>
+            <artifactId>athena</artifactId>
+            <version>2017.1.1</version>
+        </dependency>
+        <!--FRC NetworkTables-->
+        <dependency>
+            <groupId>edu.wpi.first.wpilib.networktables.java</groupId>
+            <artifactId>NetworkTables</artifactId>
+            <version>3.1.5</version>
+            <classifier>arm</classifier>
+        </dependency>
+        <!--CameraServer-->
+        <dependency>
+            <groupId>edu.wpi.cscore.java</groupId>
+            <artifactId>cscore</artifactId>
+            <version>1.0.0</version>
+            <classifier>arm</classifier>
+        </dependency>
+        <!--opencv-->
+        <dependency>
+            <groupId>org.opencv</groupId>
+            <artifactId>opencv-java</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+    </dependencies>
+
 
     <build>
         <plugins>
@@ -64,7 +105,7 @@
             <plugin>
                 <groupId>com.ckcyberpack.software</groupId>
                 <artifactId>riobuild-maven-plugin</artifactId>
-                <version>1.0-RELEASE</version>
+                <version>1.1-RELEASE</version>
                 <configuration>
                     <teamNumber>${teamNumber}</teamNumber>
                 </configuration>
