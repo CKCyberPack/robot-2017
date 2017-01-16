@@ -18,3 +18,5 @@ hs_err_pid*
 *.iml
 *.workspace
 *.metadata
+dist/
+build/
