@@ -1,0 +1,131 @@
+14/Jan/2017 12:38:25,855- ControllerFactory: Loading controller WELCOME_CONTROLLER
+14/Jan/2017 12:38:30,731- AbstractController: Moving to controller INTERNET_CONTROLLER
+14/Jan/2017 12:38:30,731- ControllerFactory: Loading controller INTERNET_CONTROLLER
+14/Jan/2017 12:38:30,753- InternetController: No valid JRE found
+14/Jan/2017 12:38:36,000- InternetController: Starting internet check
+14/Jan/2017 12:38:36,336- InternetController: Internet check successful, moving to download
+14/Jan/2017 12:38:36,338- AbstractController: Moving to controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:38:36,338- ControllerFactory: Loading controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:38:36,682- DownloadController: Loading download page page
+14/Jan/2017 12:38:36,683- DownloadController: Loading download page page
+14/Jan/2017 12:38:39,241- DownloadController: Loading download page page
+14/Jan/2017 12:39:22,671- AbstractController: Moving to controller INTERNET_CONTROLLER
+14/Jan/2017 12:39:22,671- ControllerFactory: Loading controller INTERNET_CONTROLLER
+14/Jan/2017 12:39:22,732- InternetController: No valid JRE found
+14/Jan/2017 12:39:25,088- AbstractController: Showing exit popup
+14/Jan/2017 12:39:27,105- AbstractController: Exiting installer from popup
+14/Jan/2017 12:39:54,878- ControllerFactory: Loading controller WELCOME_CONTROLLER
+14/Jan/2017 12:39:57,093- AbstractController: Moving to controller INTERNET_CONTROLLER
+14/Jan/2017 12:39:57,093- ControllerFactory: Loading controller INTERNET_CONTROLLER
+14/Jan/2017 12:39:57,105- InternetController: No valid JRE found
+14/Jan/2017 12:39:58,482- InternetController: Starting internet check
+14/Jan/2017 12:39:58,551- InternetController: Internet check successful, moving to download
+14/Jan/2017 12:39:58,552- AbstractController: Moving to controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:39:58,552- ControllerFactory: Loading controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:39:58,640- DownloadController: Loading download page page
+14/Jan/2017 12:39:58,641- DownloadController: Loading download page page
+14/Jan/2017 12:39:59,927- DownloadController: Loading download page page
+14/Jan/2017 12:40:13,302- DownloadController: Loading unknown page
+14/Jan/2017 12:40:13,303- DownloadController: Loading unknown page
+14/Jan/2017 12:40:14,672- DownloadController: Loading unknown page
+14/Jan/2017 12:40:14,681- DownloadController: Loading login page
+14/Jan/2017 12:40:14,682- DownloadController: Loading login page
+14/Jan/2017 12:40:16,639- DownloadController: Loading login page
+14/Jan/2017 12:40:23,908- DownloadController: Loading unknown page
+14/Jan/2017 12:40:23,909- DownloadController: Loading unknown page
+14/Jan/2017 12:40:24,657- DownloadController: Loading unknown page
+14/Jan/2017 12:40:24,667- DownloadController: Loading login page
+14/Jan/2017 12:40:24,668- DownloadController: Loading login page
+14/Jan/2017 12:40:24,913- DownloadController: Loading login page
+14/Jan/2017 12:40:29,939- DownloadController: Loading unknown page
+14/Jan/2017 12:40:29,940- DownloadController: Loading unknown page
+14/Jan/2017 12:40:30,692- DownloadController: Loading unknown page
+14/Jan/2017 12:40:30,698- DownloadController: Loading login page
+14/Jan/2017 12:40:30,698- DownloadController: Loading login page
+14/Jan/2017 12:40:30,924- DownloadController: Loading login page
+14/Jan/2017 12:40:37,979- DownloadController: Loading account creation page
+14/Jan/2017 12:40:37,981- DownloadController: Loading account creation page
+14/Jan/2017 12:40:38,383- DownloadController: Loading account creation page
+14/Jan/2017 12:40:38,397- DownloadController: Loading account creation page
+14/Jan/2017 12:40:38,398- DownloadController: Loading account creation page
+14/Jan/2017 12:40:40,715- DownloadController: Loading account creation page
+14/Jan/2017 12:41:27,380- DownloadController: Loading unknown page
+14/Jan/2017 12:41:27,381- DownloadController: Loading unknown page
+14/Jan/2017 12:41:28,515- DownloadController: Loading unknown page
+14/Jan/2017 12:41:36,991- AbstractController: Moving to controller INTERNET_CONTROLLER
+14/Jan/2017 12:41:36,991- ControllerFactory: Loading controller INTERNET_CONTROLLER
+14/Jan/2017 12:41:37,029- InternetController: No valid JRE found
+14/Jan/2017 12:41:37,718- InternetController: Starting internet check
+14/Jan/2017 12:41:37,766- InternetController: Internet check successful, moving to download
+14/Jan/2017 12:41:37,767- AbstractController: Moving to controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:41:37,767- ControllerFactory: Loading controller DOWNLOAD_CONTROLLER
+14/Jan/2017 12:41:37,803- DownloadController: Loading download page page
+14/Jan/2017 12:41:37,803- DownloadController: Loading download page page
+14/Jan/2017 12:41:39,107- DownloadController: Loading download page page
+14/Jan/2017 12:41:49,134- DownloadController: Loading unknown page
+14/Jan/2017 12:41:49,134- DownloadController: Loading unknown page
+14/Jan/2017 12:41:49,987- DownloadController: Loading unknown page
+14/Jan/2017 12:41:50,003- DownloadController: Loading login page
+14/Jan/2017 12:41:50,003- DownloadController: Loading login page
+14/Jan/2017 12:41:50,997- DownloadController: Loading login page
+14/Jan/2017 12:42:09,572- DownloadController: Loading unknown page
+14/Jan/2017 12:42:09,573- DownloadController: Loading unknown page
+14/Jan/2017 12:42:10,435- DownloadController: Signed in and have the .tar.gz link.
+14/Jan/2017 12:42:10,436- AbstractController: Moving to controller DOWNLOAD_PROGRESS_CONTROLLER
+14/Jan/2017 12:42:10,436- ControllerFactory: Loading controller DOWNLOAD_PROGRESS_CONTROLLER
+14/Jan/2017 12:42:10,479- DownloadProgressController: Initial url is https://edelivery.oracle.com/akam/otn/java/ejdk/8u6-b23/ejdk-8u6-fcs-b23-linux-arm-vfp-sflt-12_jun_2014.tar.gz
+14/Jan/2017 12:42:10,620- DownloadProgressController: Redirecting to http://download.oracle.com/otn/java/ejdk/8u6-b23/ejdk-8u6-fcs-b23-linux-arm-vfp-sflt-12_jun_2014.tar.gz?AuthParam=1484415851_1633069a8197d19e4db1906ece4b544a
+14/Jan/2017 12:42:10,718- DownloadProgressController: Final url is http://download.oracle.com/otn/java/ejdk/8u6-b23/ejdk-8u6-fcs-b23-linux-arm-vfp-sflt-12_jun_2014.tar.gz?AuthParam=1484415851_1633069a8197d19e4db1906ece4b544a
+14/Jan/2017 12:42:10,719- DownloadProgressController: Starting JRE Creator download. File size is 121568917 bytes
+14/Jan/2017 12:42:10,850- DownloadController: Loading unknown page
+14/Jan/2017 12:42:19,520- DownloadProgressController: Downloaded JRE
+14/Jan/2017 12:42:19,523- AbstractController: Moving to controller UNTAR_CONTROLLER
+14/Jan/2017 12:42:19,524- ControllerFactory: Loading controller UNTAR_CONTROLLER
+14/Jan/2017 12:42:19,539- UntarController: Starting decompress of file C:\Users\btboundy\wpilib\tools\.\ejdk-8u6-fcs-b23-linux-arm-vfp-sflt-12_jun_2014.tar.gz to C:\Users\btboundy\wpilib\tools\.
+14/Jan/2017 12:43:06,677- AbstractController: Moving to controller CREATE_JRE_CONTROLLER
+14/Jan/2017 12:43:06,678- ControllerFactory: Loading controller CREATE_JRE_CONTROLLER
+14/Jan/2017 12:43:06,684- CreateJreController: Staring JRE Creation
+14/Jan/2017 12:43:06,685- CreateJreController: Creator location: C:\Users\btboundy\wpilib\tools\.\ejdk1.8.0_06\lib\JRECreate.jar
+14/Jan/2017 12:43:06,685- CreateJreController: Command: [java, -jar, C:\Users\btboundy\wpilib\tools\.\ejdk1.8.0_06\lib\JRECreate.jar, --dest, JRE, --profile, compact2, --vm, client, --keep-debug-info, --debug]
+14/Jan/2017 12:43:06,685- CreateJreController: EJDK_HOME: C:\Users\btboundy\wpilib\tools\.\ejdk1.8.0_06
+14/Jan/2017 12:43:07,436- CreateJreController: Successfully Created JRE!
+14/Jan/2017 12:43:07,437- AbstractController: Moving to controller TAR_JRE_CONTROLLER
+14/Jan/2017 12:43:07,437- ControllerFactory: Loading controller TAR_JRE_CONTROLLER
+14/Jan/2017 12:43:07,446- TarJREController: Starting zip
+14/Jan/2017 12:43:10,916- TarJREController: Finished zip, starting md5 hash
+14/Jan/2017 12:43:56,099- TarJREController: Finished md5 hash, hash is 8515663C76A3B1778094F282030EC572
+14/Jan/2017 12:43:56,102- AbstractController: Moving to controller CONNECT_ROBORIO_CONTROLLER
+14/Jan/2017 12:43:56,102- ControllerFactory: Loading controller CONNECT_ROBORIO_CONTROLLER
+14/Jan/2017 12:44:02,388- ConnectRoboRioController: Connecting to roborio-5689-frc.local
+14/Jan/2017 12:44:02,390- ConnectRoboRioController: Checking for mDNS connection to the roboRIO
+14/Jan/2017 12:44:02,890- ConnectRoboRioController: roborio-5689-frc.local is reachable
+14/Jan/2017 12:44:02,892- ConnectRoboRioController: Found mDNS connection
+14/Jan/2017 12:44:02,892- AbstractController: Moving to controller DEPLOY_CONTROLLER
+14/Jan/2017 12:44:02,892- ControllerFactory: Loading controller DEPLOY_CONTROLLER
+14/Jan/2017 12:44:03,943- DeployController: Size command is C0644 15273692 JRE.tar.gz
+
+14/Jan/2017 12:44:03,988- DeployController: Return code is 0
+14/Jan/2017 12:44:05,494- DeployController: Return code is 0
+14/Jan/2017 12:44:05,498- DeployController: Attempting to remove old JRE
+14/Jan/2017 12:44:05,499- DeployController: Running command rm -r /usr/local/frc/JRE
+14/Jan/2017 12:44:05,649- DeployController: Error with command rm -r /usr/local/frc/JRE
+14/Jan/2017 12:44:05,649- DeployController: No JRE folder removed
+14/Jan/2017 12:44:05,649- DeployController: Extracting the JRE
+14/Jan/2017 12:44:05,649- DeployController: Running command tar -xzf /home/admin/JRE.tar.gz -C /home/admin/
+14/Jan/2017 12:44:06,750- DeployController: Extracted the JRE
+14/Jan/2017 12:44:06,750- DeployController: Moving the JRE
+14/Jan/2017 12:44:06,751- DeployController: Running command mv /home/admin/JRE /usr/local/frc
+14/Jan/2017 12:44:06,853- DeployController: Moved the JRE
+14/Jan/2017 12:44:06,853- DeployController: Setting permissions
+14/Jan/2017 12:44:06,854- DeployController: Running command chmod +x /usr/local/frc/JRE/bin/*
+14/Jan/2017 12:44:06,956- DeployController: Running command setcap 'cap_sys_nice=pe' /usr/local/frc/JRE/bin/java
+14/Jan/2017 12:44:07,058- DeployController: Running command echo '/usr/local/frc/JRE/lib/arm/jli' > /etc/ld.so.conf.d/java.conf
+14/Jan/2017 12:44:07,159- DeployController: Running command ldconfig
+14/Jan/2017 12:44:07,262- DeployController: Set permissions
+14/Jan/2017 12:44:07,262- DeployController: Cleaning up
+14/Jan/2017 12:44:07,263- DeployController: Running command rm /home/admin/JRE.tar.gz
+14/Jan/2017 12:44:07,765- DeployController: Cleaned up
+14/Jan/2017 12:44:07,776- AbstractController: Moving to controller SUCCESS_CONTROLLER
+14/Jan/2017 12:44:07,777- ControllerFactory: Loading controller SUCCESS_CONTROLLER
+14/Jan/2017 12:44:13,976- SuccessController: Cleaning up installer files
+14/Jan/2017 12:44:14,380- SuccessController: Finished!
