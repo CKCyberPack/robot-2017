@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5689;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -142,5 +143,6 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void testPeriodic() {
         super.testPeriodic();
+        LiveWindow.run();
     }
 }
