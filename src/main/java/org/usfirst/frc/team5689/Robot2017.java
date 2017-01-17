@@ -75,6 +75,8 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Accelerometer Y", maxY);
         SmartDashboard.putNumber("Accelerometer Z", maxZ);
 
+        if (!wallCollision && !ckController.getXButton()) wallCollision = false;
+
         if (ckController.getAButton()) {
             if (!bTriggerPressed) {
                 //First loop
@@ -95,7 +97,7 @@ public class Robot2017 extends IterativeRobot {
             }
 
             bTriggerPressed = true;
-        } else if (ckController.getXButton() && !wallCollision) {
+        } else if (ckController.getXButton()) {
             if (!bTriggerPressed) {
                 //First loop
                 ckGyro.reset();
@@ -104,7 +106,7 @@ public class Robot2017 extends IterativeRobot {
             //TODO - Use the built in accelerometer to sense a collision and stop
             ckDrive.arcadeDrive(0.4, ckGyro.getAngle() / 20);
             bTriggerPressed = true;
-            if (ckAcc.getY() < -1.8) {
+            if (ckAcc.getY() < -1.5) {
                 wallCollision = true;
             }
         } else {
