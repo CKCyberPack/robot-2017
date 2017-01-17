@@ -12,6 +12,10 @@ public class Robot2017 extends IterativeRobot {
 
     BuiltInAccelerometer ckAcc;
 
+    double maxX = 0;
+    double maxY = 0;
+    double maxZ = 0;
+
     VictorSP leftMotor;
     VictorSP rightMotor;
     XboxController ckController;
@@ -53,9 +57,21 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Gyro", ckGyro.getAngle());
         SmartDashboard.putNumber("Left Motor", leftMotor.getSpeed());
         SmartDashboard.putNumber("Right Motor", rightMotor.getSpeed());
-        SmartDashboard.putNumber("Accelerometer X", ckAcc.getX());
-        SmartDashboard.putNumber("Accelerometer Y", ckAcc.getY());
-        SmartDashboard.putNumber("Accelerometer Z", ckAcc.getZ());
+
+        double cx = ckAcc.getX();
+        double cy = ckAcc.getX();
+        double cz = ckAcc.getX();
+
+        if (cx < maxX)
+            maxX = cx;
+        if (cy < maxY)
+            maxY = cy;
+        if (cz < maxZ)
+            maxZ = cz;
+
+        SmartDashboard.putNumber("Accelerometer X", maxX);
+        SmartDashboard.putNumber("Accelerometer Y", maxY);
+        SmartDashboard.putNumber("Accelerometer Z", maxZ);
 
         if (ckController.getAButton()) {
             if (!bTriggerPressed) {
