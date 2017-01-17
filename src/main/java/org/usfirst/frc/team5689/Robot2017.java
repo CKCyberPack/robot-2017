@@ -97,7 +97,7 @@ public class Robot2017 extends IterativeRobot {
             }
 
             bTriggerPressed = true;
-        } else if (ckController.getXButton()) {
+        } else if (ckController.getXButton() && !wallCollision) {
             if (!bTriggerPressed) {
                 //First loop
                 ckGyro.reset();
