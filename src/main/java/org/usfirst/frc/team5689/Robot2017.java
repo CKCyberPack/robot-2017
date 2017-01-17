@@ -104,7 +104,7 @@ public class Robot2017 extends IterativeRobot {
                 wallCollision = false;
             }
             //TODO - Use the built in accelerometer to sense a collision and stop
-            ckDrive.arcadeDrive(0.4, ckGyro.getAngle() / 20);
+            ckDrive.arcadeDrive(0.75, ckGyro.getAngle() / 20);
             bTriggerPressed = true;
             if (ckAcc.getY() < -1.5) {
                 wallCollision = true;
