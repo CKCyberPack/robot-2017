@@ -24,6 +24,7 @@ public class Robot2017 extends IterativeRobot {
     ADXRS450_Gyro ckGyro;
 
     boolean bTriggerPressed = false;
+    private boolean wallCollision;
 
 
     @Override
@@ -94,14 +95,18 @@ public class Robot2017 extends IterativeRobot {
             }
 
             bTriggerPressed = true;
-        } else if (ckController.getXButton()) {
+        } else if (ckController.getXButton() && !wallCollision) {
             if (!bTriggerPressed) {
                 //First loop
                 ckGyro.reset();
+                wallCollision = false;
             }
             //TODO - Use the built in accelerometer to sense a collision and stop
             ckDrive.arcadeDrive(0.4, ckGyro.getAngle() / 20);
             bTriggerPressed = true;
+            if (ckAcc.getY() < -1.8) {
+                wallCollision = true;
+            }
         } else {
             ckDrive.tankDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getY(GenericHID.Hand.kRight));
             bTriggerPressed = false;
