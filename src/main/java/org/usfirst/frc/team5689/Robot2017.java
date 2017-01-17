@@ -58,7 +58,7 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Accelerometer Z", ckAcc.getZ());
 
         if (ckController.getAButton()) {
-            if (bTriggerPressed == false) {
+            if (!bTriggerPressed) {
                 //First loop
                 ckGyro.reset();
             }
@@ -78,7 +78,7 @@ public class Robot2017 extends IterativeRobot {
 
             bTriggerPressed = true;
         } else if (ckController.getXButton()) {
-            if (bTriggerPressed == false) {
+            if (!bTriggerPressed) {
                 //First loop
                 ckGyro.reset();
             }
@@ -118,7 +118,7 @@ public class Robot2017 extends IterativeRobot {
     public void testInit() {
         super.testInit();
 
-        VictorSP testing = new VictorSP(2);
+        //VictorSP testing = new VictorSP(2);
 
 
     }
