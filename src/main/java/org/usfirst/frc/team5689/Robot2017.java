@@ -10,6 +10,8 @@ public class Robot2017 extends IterativeRobot {
     String autoSelected;
     SendableChooser<String> chooser = new SendableChooser<>();
 
+    BuiltInAccelerometer ckAcc;
+
     VictorSP leftMotor;
     VictorSP rightMotor;
     XboxController ckController;
@@ -32,6 +34,7 @@ public class Robot2017 extends IterativeRobot {
         ckDrive = new RobotDrive(leftMotor, rightMotor);
         ckGyro = new ADXRS450_Gyro();
         ckGyro.calibrate();
+        ckAcc = new BuiltInAccelerometer();
     }
 
     @Override
@@ -50,6 +53,9 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Gyro", ckGyro.getAngle());
         SmartDashboard.putNumber("Left Motor", leftMotor.getSpeed());
         SmartDashboard.putNumber("Right Motor", rightMotor.getSpeed());
+        SmartDashboard.putNumber("Accelerometer X", ckAcc.getX());
+        SmartDashboard.putNumber("Accelerometer Y", ckAcc.getY());
+        SmartDashboard.putNumber("Accelerometer Z", ckAcc.getZ());
 
         if (ckController.getAButton()) {
             if (bTriggerPressed == false) {
