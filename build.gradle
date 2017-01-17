@@ -12,11 +12,11 @@ frc {
 
 dependencies {
     compile wpilib()
-    compile talonSrx()
+    //compile talonSrx()
 
     // Use these to link your own third-party device libraries (e.g. navX)
-    compile fileTree(dir: 'libs', include: '*.jar')
-    nativeLib  fileTree(dir: 'libs', include: '*.so')
+    compile fileTree(dir: 'libs', include: 'navx_frc.jar')
+    //nativeLib  fileTree(dir: 'libs', include: '*.so')
 }
 
 def robotManifest = {
