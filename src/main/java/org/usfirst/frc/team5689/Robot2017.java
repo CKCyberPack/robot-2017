@@ -75,7 +75,7 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Accelerometer Y", maxY);
         SmartDashboard.putNumber("Accelerometer Z", maxZ);
 
-        if (!wallCollision && !ckController.getXButton()) wallCollision = false;
+        if (wallCollision && !ckController.getXButton()) wallCollision = false;
 
         if (ckController.getAButton()) {
             if (!bTriggerPressed) {
