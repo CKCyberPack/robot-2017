@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5689;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,7 +25,7 @@ public class Robot2017 extends IterativeRobot {
     ADXRS450_Gyro ckGyro;
     Encoder leftEncoder;
     Encoder rightEncoder;
-
+    AHRS ckNavX;
     boolean bTriggerPressed = false;
     private boolean wallCollision;
 
@@ -41,7 +42,7 @@ public class Robot2017 extends IterativeRobot {
         ckController = new XboxController(0);
         ckDrive = new RobotDrive(leftMotor, rightMotor);
         ckGyro = new ADXRS450_Gyro();
-        ckGyro.calibrate();
+        ckNavX = new AHRS(SerialPort.Port.kUSB);
         ckAcc = new BuiltInAccelerometer();
         leftEncoder = new Encoder(0,1,true);
         rightEncoder = new Encoder(2,3);
@@ -67,6 +68,9 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Right Motor", rightMotor.getSpeed());
         SmartDashboard.putNumber("Left Encoder", leftEncoder.getDistance());
         SmartDashboard.putNumber("Right Encoder", rightEncoder.getDistance());
+        SmartDashboard.putNumber("NavX", ckNavX.getYaw());
+        SmartDashboard.putBoolean("NavX Connected", ckNavX.isConnected());
+
 
         double cx = ckAcc.getX();
         double cy = ckAcc.getX();
@@ -87,6 +91,8 @@ public class Robot2017 extends IterativeRobot {
         if (ckController.getYButton()){
             leftEncoder.reset();
             rightEncoder.reset();
+            ckGyro.reset();
+            ckNavX.reset();
         }
 
         if (wallCollision && !ckController.getXButton()) wallCollision = false;
