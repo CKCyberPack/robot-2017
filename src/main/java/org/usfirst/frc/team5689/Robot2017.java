@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot2017 extends IterativeRobot {
+
+    public static Robot2017 instance;
+
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -29,9 +32,9 @@ public class Robot2017 extends IterativeRobot {
     boolean bTriggerPressed = false;
     private boolean wallCollision;
 
-
     @Override
     public void robotInit() {
+        instance = this;
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
