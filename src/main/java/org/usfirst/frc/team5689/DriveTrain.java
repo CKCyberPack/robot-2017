@@ -33,6 +33,7 @@ public class DriveTrain {
         ckNavX = new AHRS(RobotMap.portNavx);
 
         ckDrive = new RobotDrive(leftBackMotor,leftFrontMotor,rightFrontMotor, rightBackMotor);
+        ckDrive.setSafetyEnabled(false);
     }
 
 

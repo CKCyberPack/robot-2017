@@ -95,10 +95,14 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void testPeriodic() {
-        super.testPeriodic();
-        LiveWindow.run();
-        ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
-        ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
-        ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
+        while (isTest() && isOperatorControl()) {
+            LiveWindow.run();
+            ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
+            ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
+            ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
+            Timer.delay(0.005);
+        }
+        ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+        ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
     }
 }
