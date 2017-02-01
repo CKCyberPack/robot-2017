@@ -12,9 +12,22 @@ public class Robot2017 extends IterativeRobot {
     String autoSelected;
     SendableChooser<String> chooser = new SendableChooser<>();
 
+    BuiltInAccelerometer ckAcc;
 
+    double maxX = 0;
+    double maxY = 0;
+    double maxZ = 0;
+
+    VictorSP leftMotor;
+    VictorSP rightMotor;
     XboxController ckController;
-    DriveTrain ckDrive;
+    RobotDrive ckDrive;
+    ADXRS450_Gyro ckGyro;
+    Encoder leftEncoder;
+    Encoder rightEncoder;
+    AHRS ckNavX;
+    boolean bTriggerPressed = false;
+    private boolean wallCollision;
 
 
     @Override
@@ -24,9 +37,17 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putData("Auto choices", chooser);
 
 
+        leftMotor = new VictorSP(0);
+        rightMotor = new VictorSP(1);
         ckController = new XboxController(0);
-        ckDrive = new DriveTrain();
-
+        ckDrive = new RobotDrive(leftMotor, rightMotor);
+        ckGyro = new ADXRS450_Gyro();
+        ckNavX = new AHRS(SerialPort.Port.kUSB);
+        ckAcc = new BuiltInAccelerometer();
+        leftEncoder = new Encoder(0,1,true);
+        rightEncoder = new Encoder(2,3);
+        leftEncoder.setDistancePerPulse(6 * Math.PI / 360);
+        rightEncoder.setDistancePerPulse(6 * Math.PI / 360);
     }
 
     @Override
@@ -42,35 +63,76 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
+        SmartDashboard.putNumber("Gyro", ckGyro.getAngle());
+        SmartDashboard.putNumber("Left Motor", leftMotor.getSpeed());
+        SmartDashboard.putNumber("Right Motor", rightMotor.getSpeed());
+        SmartDashboard.putNumber("Left Encoder", leftEncoder.getDistance());
+        SmartDashboard.putNumber("Right Encoder", rightEncoder.getDistance());
+        SmartDashboard.putNumber("NavX", ckNavX.getYaw());
+        SmartDashboard.putBoolean("NavX Connected", ckNavX.isConnected());
 
-//        if (ckController.getAButton()) {
-//            if (!bTriggerPressed) {
-//                //First loop
-//                ckGyro.reset();
-//            }
-//
-//            if (ckGyro.getAngle() < 80) {
-//                ckDrive.arcadeDrive(0, -0.5);
-//            } else if (ckGyro.getAngle() < 89) {
-//                ckDrive.arcadeDrive(0, -0.33);
-//
-//            } else if (ckGyro.getAngle() > 100) {
-//                ckDrive.arcadeDrive(0, 0.5);
-//            } else if (ckGyro.getAngle() > 91) {
-//                ckDrive.arcadeDrive(0, 0.33);
-//            } else {
-//                ckDrive.stopMotor();
-//            }
-//
-//            bTriggerPressed = true;
-//        } else if (ckController.getXButton() && !wallCollision) {
-        if (ckController.getXButton()){
-            ckDrive.driveForward(10);
-        }
-        else {
-            ckDrive.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
+
+        double cx = ckAcc.getX();
+        double cy = ckAcc.getX();
+        double cz = ckAcc.getX();
+
+        if (cx < maxX)
+            maxX = cx;
+        if (cy < maxY)
+            maxY = cy;
+        if (cz < maxZ)
+            maxZ = cz;
+
+        SmartDashboard.putNumber("Accelerometer X", maxX);
+        SmartDashboard.putNumber("Accelerometer Y", maxY);
+        SmartDashboard.putNumber("Accelerometer Z", maxZ);
+
+
+        if (ckController.getYButton()){
+            leftEncoder.reset();
+            rightEncoder.reset();
+            ckGyro.reset();
+            ckNavX.reset();
         }
 
+        if (wallCollision && !ckController.getXButton()) wallCollision = false;
+
+        if (ckController.getAButton()) {
+            if (!bTriggerPressed) {
+                //First loop
+                ckGyro.reset();
+            }
+
+            if (ckGyro.getAngle() < 80) {
+                ckDrive.arcadeDrive(0, -0.5);
+            } else if (ckGyro.getAngle() < 89) {
+                ckDrive.arcadeDrive(0, -0.33);
+
+            } else if (ckGyro.getAngle() > 100) {
+                ckDrive.arcadeDrive(0, 0.5);
+            } else if (ckGyro.getAngle() > 91) {
+                ckDrive.arcadeDrive(0, 0.33);
+            } else {
+                ckDrive.stopMotor();
+            }
+
+            bTriggerPressed = true;
+        } else if (ckController.getXButton() && !wallCollision) {
+            if (!bTriggerPressed) {
+                //First loop
+                ckGyro.reset();
+                wallCollision = false;
+            }
+            //TODO - Use the built in accelerometer to sense a collision and stop
+            ckDrive.arcadeDrive(0.75, ckGyro.getAngle() / 20);
+            bTriggerPressed = true;
+            if (ckAcc.getY() < -1.5) {
+                wallCollision = true;
+            }
+        } else {
+            ckDrive.arcadeDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
+            bTriggerPressed = false;
+        }
     }
 
     @Override
