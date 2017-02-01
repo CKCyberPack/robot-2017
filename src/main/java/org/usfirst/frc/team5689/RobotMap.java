@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 
 /**
@@ -24,8 +22,7 @@ public abstract class RobotMap {
     //Digital Inputs
     public static int encoderA = 0;
     public static int encoderB = 1;
-    public static SerialPort.Port portNavx = SerialPort.Port.kUSB;
-
+    public static SerialPort.Port gyro = SerialPort.Port.kUSB;
 
     //Pneumatic Controller Module
     public static int pcmPiston = 0;
@@ -38,6 +35,6 @@ public abstract class RobotMap {
     public static float maxCollisionG = 2;
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double forwardSpeed = 0.75;
-    public static double gyroCorrection = 0.05; //Amount to multiply gyro angle by
+    public static double gyroCorrection = 20;
 
 }
