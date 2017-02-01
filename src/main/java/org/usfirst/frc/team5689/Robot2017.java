@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5689;
 
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,7 +13,7 @@ public class Robot2017 extends IterativeRobot {
 
 
     XboxController ckController;
-    DriveTrain ckDrive;
+    DriveTrain ckDriveTrain;
 
 
     @Override
@@ -25,8 +24,7 @@ public class Robot2017 extends IterativeRobot {
 
 
         ckController = new XboxController(0);
-        ckDrive = new DriveTrain();
-
+        ckDriveTrain = new DriveTrain();
     }
 
     @Override
@@ -42,33 +40,23 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
+        SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
+        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
 
-//        if (ckController.getAButton()) {
-//            if (!bTriggerPressed) {
-//                //First loop
-//                ckGyro.reset();
-//            }
-//
-//            if (ckGyro.getAngle() < 80) {
-//                ckDrive.arcadeDrive(0, -0.5);
-//            } else if (ckGyro.getAngle() < 89) {
-//                ckDrive.arcadeDrive(0, -0.33);
-//
-//            } else if (ckGyro.getAngle() > 100) {
-//                ckDrive.arcadeDrive(0, 0.5);
-//            } else if (ckGyro.getAngle() > 91) {
-//                ckDrive.arcadeDrive(0, 0.33);
-//            } else {
-//                ckDrive.stopMotor();
-//            }
-//
-//            bTriggerPressed = true;
-//        } else if (ckController.getXButton() && !wallCollision) {
-        if (ckController.getXButton()){
-            ckDrive.driveForward(10);
+
+        if (ckController.getAButton()){
+            ckDriveTrain.turn(90);
+            ckController.setRumble(GenericHID.RumbleType.kRightRumble,1);
+        }
+        else if (ckController.getXButton()){
+            ckDriveTrain.driveForward(100);
+            ckController.setRumble(GenericHID.RumbleType.kLeftRumble,1);
         }
         else {
-            ckDrive.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
+            ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+            ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+            ckDriveTrain.firstLoop = true;
+            ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
         }
 
     }
@@ -109,5 +97,8 @@ public class Robot2017 extends IterativeRobot {
     public void testPeriodic() {
         super.testPeriodic();
         LiveWindow.run();
+        ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
+        ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
+        ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
     }
 }
