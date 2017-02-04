@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 
 /**
@@ -36,8 +34,8 @@ public abstract class RobotMap {
 
     //Robot Dependent Variables
     public static float maxCollisionG = 2;
+    public static double slowSpeed = 0.4;
     public static double encoderDistance = 6 * Math.PI / 360;
-    public static double forwardSpeed = 0.75;
     public static double gyroCorrection = 0.05; //Amount to multiply gyro angle by
-
+    public static double forwardSlowDistance = 60;
 }

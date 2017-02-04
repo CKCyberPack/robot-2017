@@ -1,19 +1,24 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser<String> chooser = new SendableChooser<>();
-
-
     XboxController ckController;
     DriveTrain ckDriveTrain;
+    private DriveRunnable runningThread = null;
+    private boolean yPress;
 
 
     @Override
@@ -42,21 +47,29 @@ public class Robot2017 extends IterativeRobot {
 
         SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
         SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
+        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
+        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
 
+        if (runningThread != null) {
+            if (runningThread.getStatus() == CANCELLED || runningThread.getStatus() == FINISHED || runningThread.getStatus() == DEAD) {
+                runningThread = null;
+            }
+        }
 
-        if (ckController.getAButton()){
-            ckDriveTrain.turn(90);
-            ckController.setRumble(GenericHID.RumbleType.kRightRumble,1);
-        }
-        else if (ckController.getXButton()){
-            ckDriveTrain.driveForward(100);
-            ckController.setRumble(GenericHID.RumbleType.kLeftRumble,1);
-        }
-        else {
-            ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-            ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
-            ckDriveTrain.firstLoop = true;
-            ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft),-ckController.getX(GenericHID.Hand.kRight));
+        if (runningThread == null) {
+            if (ckController.getYButton()) {
+                ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                runningThread = ckDriveTrain.driveForward(84);
+                new Thread(runningThread).start();
+            } else if (ckController.getXButton()) {
+                ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+                runningThread = ckDriveTrain.driveForwardCheckCollision(84);
+                new Thread(runningThread).start();
+            } else {
+                ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+                ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+                ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
+            }
         }
 
     }
@@ -95,11 +108,12 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void testPeriodic() {
-        while (isTest() && isOperatorControl()) {
+        while (isTest()) {
+            super.testPeriodic();
             LiveWindow.run();
             ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
             ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
-            ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
+            teleopPeriodic();
             Timer.delay(0.005);
         }
         ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
