@@ -3,7 +3,6 @@ package org.usfirst.frc.team5689;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -63,9 +62,9 @@ public class DriveTrain {
 
             public void run() {
                 setStatus(Status.RUNNING);
-                resetSensors();
+                double endLoc = ckEncoder.getDistance() + distance;
                 boolean collision = false;
-                while (ckEncoder.getDistance() < (distance - RobotMap.forwardSlowDistance) && !isCancelled() && !collision) {
+                while (ckEncoder.getDistance() < (endLoc - RobotMap.forwardSlowDistance) && !isCancelled() && !collision) {
                     ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroCorrection);
                     if (collisionDetection) {
                         readNav();
@@ -73,9 +72,10 @@ public class DriveTrain {
                     }
                 }
                 System.out.println(maxY);
-                ckDrive.stopMotor();
-                Timer.delay(0.5);
-                while (ckEncoder.getDistance() < distance && !isCancelled() && !collision) {
+                while (!ckEncoder.getStopped()) {
+                    ckDrive.stopMotor();
+                }
+                while (ckEncoder.getDistance() < endLoc && !isCancelled() && !collision) {
                     ckDrive.arcadeDrive(RobotMap.slowSpeed, ckNavX.getAngle() * RobotMap.gyroCorrection);
                     if (collisionDetection) {
                         readNav();
