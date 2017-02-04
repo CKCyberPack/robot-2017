@@ -36,7 +36,11 @@ public abstract class RobotMap {
     public static float maxCollisionG = 2;
     public static double slowSpeed = 0.4;
     public static double encoderDistance = 6 * Math.PI / 360;
-    public static double gyroCorrection = 0.05; //Amount to multiply gyro angle by
     public static double forwardSlowDistance = 60;
     public static double encoderStopSpeed = 1;
+    public static double gyroTurnKIntegralAngle = 60;
+    public static double gyroStraightKp = -0.05; //Amount to multiply gyro angle by
+    public static double gyroTurnKp = -0.01;
+    public static double gyroTurnKi = -0.0025;
+    public static double gyroTurnKd = -0.00125;
 }

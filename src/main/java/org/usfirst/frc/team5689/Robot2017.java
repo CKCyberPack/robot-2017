@@ -59,16 +59,22 @@ public class Robot2017 extends IterativeRobot {
         if (runningThread == null) {
             if (ckController.getYButton()) {
                 ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                runningThread = ckDriveTrain.driveForward(84);
+                ckDriveTrain.resetSensors();
+                runningThread = ckDriveTrain.turn(90);
                 new Thread(runningThread).start();
             } else if (ckController.getXButton()) {
                 ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+                ckDriveTrain.resetSensors();
                 runningThread = ckDriveTrain.driveForwardCheckCollision(84);
                 new Thread(runningThread).start();
             } else {
                 ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
                 ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
                 ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
+            }
+        } else {
+            if (ckController.getBButton()) {
+                runningThread.cancel();
             }
         }
 
