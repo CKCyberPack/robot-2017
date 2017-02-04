@@ -38,4 +38,5 @@ public abstract class RobotMap {
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double gyroCorrection = 0.05; //Amount to multiply gyro angle by
     public static double forwardSlowDistance = 60;
+    public static double encoderStopSpeed = 1;
 }

@@ -29,6 +29,7 @@ public class DriveTrain {
         ckEncoder = new Encoder(RobotMap.encoderA, RobotMap.encoderB);
         ckEncoder.setDistancePerPulse(RobotMap.encoderDistance);
         ckEncoder.setReverseDirection(true);
+        ckEncoder.setMinRate(RobotMap.encoderStopSpeed);
         ckNavX = new AHRS(RobotMap.portNavx);
 
         ckDrive = new RobotDrive(leftFrontMotor, leftBackMotor, rightFrontMotor, rightBackMotor);
