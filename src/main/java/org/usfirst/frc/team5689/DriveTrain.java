@@ -68,13 +68,19 @@ public class DriveTrain {
                 double endLoc = ckEncoder.getDistance() + distance;
                 boolean collision = false;
                 while (ckEncoder.getDistance() < (endLoc - RobotMap.forwardSlowDistance) && !isCancelled() && !collision) {
-                    ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroStraightKp);
+                    //Drive slow for the first couple inches
+                    if (ckEncoder.getDistance() < 3){
+                        ckDrive.arcadeDrive(RobotMap.slowSpeed,0);
+                    }else {
+                        ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroStraightKp);
+                    }
                     if (collisionDetection) {
                         readNav();
                         if (maxY < -RobotMap.maxCollisionG) collision = true;
                     }
+                    Timer.delay(0.05);
                 }
-                System.out.println(maxY);
+
                 while (!ckEncoder.getStopped()) {
                     ckDrive.stopMotor();
                 }
@@ -84,8 +90,9 @@ public class DriveTrain {
                         readNav();
                         if (maxY < -RobotMap.maxCollisionG) collision = true;
                     }
+                    Timer.delay(0.05);
                 }
-                System.out.println(maxY);
+
                 ckDrive.stopMotor();
                 setStatus(isCancelled() ? CANCELLED : collision ? DEAD : FINISHED);
             }

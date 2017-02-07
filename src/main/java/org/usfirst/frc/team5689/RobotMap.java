@@ -33,16 +33,15 @@ public abstract class RobotMap {
     public static int pcmCompressor = 4;
 
     //Robot Dependent Variables
-    public static float maxCollisionG = 2;
+    public static float maxCollisionG = 0.5f;
     public static double slowSpeed = 0.4;
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double forwardSlowDistance = 60;
     public static double encoderStopSpeed = 1;
-    public static double gyroTurnKIntegralAngle = 60;
-    public static double gyroStraightKp = -0.05; //Amount to multiply gyro angle by
-    public static double gyroTurnKp = 0.03; //0.04
-    public static double gyroTurnKi = 0.007; //0.002
-    public static double gyroTurnKd = 0.1; //.03-.005-.1
+    public static double gyroStraightKp = -0.02; //Negative value to go left
+    public static double gyroTurnKp = 0.03; //0.03
+    public static double gyroTurnKi = 0.007; //0.007
+    public static double gyroTurnKd = 0.1; //0.1
     public static double gyroTurnMax = 0.9;
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 1; //Number of degrees off by
