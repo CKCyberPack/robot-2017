@@ -59,7 +59,6 @@ public class Robot2017 extends IterativeRobot {
         if (runningThread == null) {
             if (ckController.getYButton()) {
                 ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                ckDriveTrain.resetSensors();
                 runningThread = ckDriveTrain.turn(90);
                 new Thread(runningThread).start();
             } else if (ckController.getXButton()) {
@@ -67,7 +66,10 @@ public class Robot2017 extends IterativeRobot {
                 ckDriveTrain.resetSensors();
                 runningThread = ckDriveTrain.driveForwardCheckCollision(84);
                 new Thread(runningThread).start();
-            } else {
+            } else if (ckController.getAButton()){
+                ckDriveTrain.resetSensors();
+            }
+            else {
                 ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
                 ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
                 ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));

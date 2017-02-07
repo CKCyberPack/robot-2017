@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.awt.*;
+
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class DriveTrain {
@@ -19,7 +21,6 @@ public class DriveTrain {
     AHRS ckNavX;
     boolean firstLoop;
     boolean collisionDetected;
-
 
     public DriveTrain() {
         leftFrontMotor = new VictorSP(RobotMap.pwmLeftFrontDrive);
@@ -107,22 +108,44 @@ public class DriveTrain {
                 double previousError = 0;
                 while (!done && !isCancelled()) {
                     double error = targetAngle - ckNavX.getAngle();
-                    integral += error;
-                    if (error * integral < 0) integral = 0;
-                    if (Math.abs(error) > RobotMap.gyroTurnKIntegralAngle) integral = 0;
+
+                    if (RobotMap.gyroTurnKi != 0) {
+                        double potentialIGain = (integral + error) * RobotMap.gyroTurnKi;
+                        if (potentialIGain < RobotMap.gyroTurnMax) {
+                            if (potentialIGain > RobotMap.gyroTurnMin) {
+                                integral += error;
+                            } else {
+                                integral = RobotMap.gyroTurnMin;
+                            }
+                        } else {
+                            integral = RobotMap.gyroTurnMax;
+                        }
+                    }
+
                     double derivative = error - previousError;
                     previousError = error;
+
                     SmartDashboard.putNumber("P", error);
                     SmartDashboard.putNumber("I", integral);
                     SmartDashboard.putNumber("D", derivative);
-                    ckDrive.arcadeDrive(0, RobotMap.gyroTurnKp * error + RobotMap.gyroTurnKi * integral + RobotMap.gyroTurnKd * derivative);
+                    double turnAmount = RobotMap.gyroTurnKp * error + RobotMap.gyroTurnKi * integral + RobotMap.gyroTurnKd * derivative;
+
+                    if (turnAmount > RobotMap.gyroTurnMax) {
+                        turnAmount = RobotMap.gyroTurnMax;
+                    } else if (turnAmount < RobotMap.gyroTurnMin) {
+                        turnAmount = RobotMap.gyroTurnMin;
+                    }
+
+                    SmartDashboard.putNumber("Turn Amount", turnAmount);
+
+                    ckDrive.arcadeDrive(0, -turnAmount);
                     if (!reached) {
-                        if (Math.abs(error) < 0.5) {
+                        if (Math.abs(error) < RobotMap.gyroTolerance) {
                             reached = true;
                             reachedTime = System.currentTimeMillis();
                         }
                     } else {
-                        if (Math.abs(ckNavX.getAngle() - targetAngle) < 0.5) {
+                        if (Math.abs(ckNavX.getAngle() - targetAngle) < RobotMap.gyroTolerance) {
                             if (System.currentTimeMillis() - reachedTime > 100) {
                                 done = true;
                             }
