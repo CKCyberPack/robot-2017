@@ -68,12 +68,7 @@ public class DriveTrain {
                 double endLoc = ckEncoder.getDistance() + distance;
                 boolean collision = false;
                 while (ckEncoder.getDistance() < (endLoc - RobotMap.forwardSlowDistance) && !isCancelled() && !collision) {
-                    //Drive slow for the first couple inches
-                    if (ckEncoder.getDistance() < 3){
-                        ckDrive.arcadeDrive(RobotMap.slowSpeed,0);
-                    }else {
-                        ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroStraightKp);
-                    }
+                    ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroStraightKp);
                     if (collisionDetection) {
                         readNav();
                         if (maxY < -RobotMap.maxCollisionG) collision = true;
@@ -142,7 +137,7 @@ public class DriveTrain {
                     } else if (turnAmount < RobotMap.gyroTurnMin) {
                         turnAmount = RobotMap.gyroTurnMin;
                     }
-
+                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
                     SmartDashboard.putNumber("Turn Amount", turnAmount);
 
                     ckDrive.arcadeDrive(0, -turnAmount);

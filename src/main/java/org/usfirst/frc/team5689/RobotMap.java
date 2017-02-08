@@ -38,10 +38,10 @@ public abstract class RobotMap {
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double forwardSlowDistance = 60;
     public static double encoderStopSpeed = 1;
-    public static double gyroStraightKp = -0.02; //Negative value to go left
+    public static double gyroStraightKp = -0.05; //Negative value to go left
     public static double gyroTurnKp = 0.03; //0.03
-    public static double gyroTurnKi = 0.007; //0.007
-    public static double gyroTurnKd = 0.1; //0.1
+    public static double gyroTurnKi = 0.01; //0.007
+    public static double gyroTurnKd = 0.175; //0.1
     public static double gyroTurnMax = 0.9;
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 1; //Number of degrees off by
