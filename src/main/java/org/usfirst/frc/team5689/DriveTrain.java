@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.awt.*;
-
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class DriveTrain {
@@ -49,11 +47,11 @@ public class DriveTrain {
         ckEncoder.reset();
     }
 
-    public DriveRunnable driveForward(double distance) {
-        return driveForward(distance, false);
+    public DriveRunnable drive(double distance) {
+        return drive(distance, false);
     }
 
-    public DriveRunnable driveForward(final double distance, final boolean collisionDetection) {
+    public DriveRunnable drive(final double distance, final boolean collisionDetection) {
         return new DriveRunnable() {
             float maxY;
 
@@ -68,24 +66,30 @@ public class DriveTrain {
                 double endLoc = ckEncoder.getDistance() + distance;
                 boolean collision = false;
                 while (ckEncoder.getDistance() < (endLoc - RobotMap.forwardSlowDistance) && !isCancelled() && !collision) {
-                    ckDrive.arcadeDrive(1, ckNavX.getAngle() * RobotMap.gyroStraightKp);
+                    double turnAmount = ckNavX.getAngle() * RobotMap.gyroStraightKp;
+                    ckDrive.arcadeDrive(1, turnAmount);
                     if (collisionDetection) {
                         readNav();
                         if (maxY < -RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
+                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
+                    SmartDashboard.putNumber("Turn Amount", turnAmount);
                 }
 
                 while (!ckEncoder.getStopped()) {
                     ckDrive.stopMotor();
                 }
                 while (ckEncoder.getDistance() < endLoc && !isCancelled() && !collision) {
-                    ckDrive.arcadeDrive(RobotMap.slowSpeed, ckNavX.getAngle() * RobotMap.gyroStraightKp);
+                    double turnAmount = ckNavX.getAngle() * RobotMap.gyroStraightKp;
+                    ckDrive.arcadeDrive(RobotMap.slowSpeed, turnAmount);
                     if (collisionDetection) {
                         readNav();
                         if (maxY < -RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
+                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
+                    SmartDashboard.putNumber("Turn Amount", turnAmount);
                 }
 
                 ckDrive.stopMotor();
@@ -96,7 +100,7 @@ public class DriveTrain {
 
 
     public DriveRunnable driveForwardCheckCollision(double distance) {
-        return driveForward(distance, true);
+        return drive(distance, true);
     }
 
     public DriveRunnable turn(double targetAngle) {
@@ -140,7 +144,7 @@ public class DriveTrain {
                     SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
                     SmartDashboard.putNumber("Turn Amount", turnAmount);
 
-                    ckDrive.arcadeDrive(0, -turnAmount);
+                    ckDrive.arcadeDrive(RobotMap.gyroStraightSpeed, -turnAmount);
                     if (!reached) {
                         if (Math.abs(error) < RobotMap.gyroTolerance) {
                             reached = true;

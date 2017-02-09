@@ -46,9 +46,9 @@ public class Robot2017 extends IterativeRobot {
     public void teleopPeriodic() {
 
 
-//        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
-//        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
-//        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
+        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
+        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
+        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
 
         if (runningThread != null) {
             if (runningThread.getStatus() == CANCELLED || runningThread.getStatus() == FINISHED || runningThread.getStatus() == DEAD) {
