@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
-    final String defaultAuto = "Default";
-    final String customAuto = "My Auto";
+    final String defaultAuto = "default";
+    final String leftGear = "left_gear";
+    final String rightGear = "right_gear";
     String autoSelected;
     SendableChooser<String> chooser = new SendableChooser<>();
     XboxController ckController;
@@ -23,8 +24,9 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void robotInit() {
-        chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("My Auto", customAuto);
+        chooser.addDefault("Drive Straight", defaultAuto);
+        chooser.addObject("Left Gear", leftGear);
+        chooser.addObject("Right Gear", rightGear);
         SmartDashboard.putData("Auto choices", chooser);
 
 
@@ -94,12 +96,31 @@ public class Robot2017 extends IterativeRobot {
     public void autonomousPeriodic() {
 
         switch (autoSelected) {
-            case customAuto:
-                // Put custom auto code here
+            case leftGear:
+                ckDriveTrain.drive(84);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.turn(30);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.drive(-36);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.turn(-30);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.drive(204);
+                break;
+            case rightGear:
+                ckDriveTrain.drive(84);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.turn(-30);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.drive(-36);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.turn(30);
+                ckDriveTrain.resetSensors();
+                ckDriveTrain.drive(204);
                 break;
             case defaultAuto:
             default:
-                // Put default auto code here
+                ckDriveTrain.drive(240);
                 break;
         }
 
