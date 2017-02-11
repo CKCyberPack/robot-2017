@@ -2,9 +2,6 @@ package org.usfirst.frc.team5689;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-/**
- * Created by Austin on 2017-01-30.
- */
 public class GearArm {
     Solenoid armPiston;
 

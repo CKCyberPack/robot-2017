@@ -39,7 +39,7 @@ public abstract class RobotMap {
     public static int pdpRopeMotor = 3;
 
     //Robot Dependent Variables
-    public static double ropeOverCurrent = 20;
+    public static double ropeOverCurrent = 75;
     public static double driveDeadzone = 0.2;
     public static float  maxCollisionG = 0.5f;
     public static double slowSpeed = 0.4;
