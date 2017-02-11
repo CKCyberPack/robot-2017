@@ -39,8 +39,9 @@ public abstract class RobotMap {
     public static int pdpRopeMotor = 3;
 
     //Robot Dependent Variables
+    public static double ropeOverCurrent = 20;
     public static double driveDeadzone = 0.2;
-    public static float maxCollisionG = 0.5f;
+    public static float  maxCollisionG = 0.5f;
     public static double slowSpeed = 0.4;
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double forwardSlowDistance = 60;

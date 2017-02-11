@@ -25,8 +25,7 @@ public class Robot2017 extends IterativeRobot {
 
     //Variables
     private DriveRunnable runningThread = null;
-    private boolean yPress;
-
+    private boolean overrideSafety = false;
 
     @Override
     public void robotInit() {
@@ -56,9 +55,26 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
+        //****Set Safety
+        if (ckController.getTrigger(GenericHID.Hand.kLeft)){
+            overrideSafety = true;
+        }else{
+            overrideSafety = false;
+        }
 
 
-        ckRopeLift.testLift(ckController.getTriggerAxis(GenericHID.Hand.kRight));
+        //****Rope Lift
+        if (overrideSafety) {
+            ckRopeLift.dangerClimb(ckController.getTriggerAxis(GenericHID.Hand.kRight));
+        }else{
+            ckRopeLift.safeClimb(ckController.getTriggerAxis(GenericHID.Hand.kRight), ckPDP);
+        }
+        //Clear Over Current
+        if (!ckController.getTrigger(GenericHID.Hand.kRight)){
+            ckRopeLift.clearOverCurrent();
+        }
+
+        //****Gear Arm
         if (ckController.getBumper(GenericHID.Hand.kRight)) {
             ckGearArm.firePiston();
         }
