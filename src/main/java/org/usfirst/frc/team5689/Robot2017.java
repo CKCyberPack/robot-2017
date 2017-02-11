@@ -8,28 +8,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
-    final String defaultAuto = "default";
-    final String leftGear = "left_gear";
-    final String rightGear = "right_gear";
-    String autoSelected;
-    SendableChooser<String> chooser = new SendableChooser<>();
-    XboxController ckController;
-    DriveTrain ckDriveTrain;
-    RopeLift ckRopeLift;
-    GearArm ckGearArm;
-    PowerDistributionPanel ckPDP;
+    //Autonomous Selector
+    private String autoSelected;
+    private SendableChooser<String> chooser;
+    private final static String defaultAuto = "default";
+    private final static String leftGear = "left_gear";
+    private final static String rightGear = "right_gear";
+    private final static String centerGear = "center_gear";
+
+    //Components
+    private XboxController ckController;
+    private DriveTrain ckDriveTrain;
+    private RopeLift ckRopeLift;
+    private GearArm ckGearArm;
+    private PowerDistributionPanel ckPDP;
+
+    //Variables
     private DriveRunnable runningThread = null;
     private boolean yPress;
 
 
     @Override
     public void robotInit() {
+        //Create SmartDashboard Chooser
+        chooser = new SendableChooser<>();
         chooser.addDefault("Drive Straight", defaultAuto);
         chooser.addObject("Left Gear", leftGear);
         chooser.addObject("Right Gear", rightGear);
+        chooser.addObject("Center Gear", centerGear);
         SmartDashboard.putData("Auto choices", chooser);
 
-
+        //Subsystems
         ckController = new XboxController(0);
         ckDriveTrain = new DriveTrain();
         ckRopeLift = new RopeLift();
@@ -39,41 +48,23 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void robotPeriodic() {
-        super.robotPeriodic();
     }
 
     @Override
     public void teleopInit() {
-        super.teleopInit();
     }
 
     @Override
     public void teleopPeriodic() {
 
 
-        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
-        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
-        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
-
-        SmartDashboard.putNumber("Current: Total", ckPDP.getTotalCurrent());
-        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
-        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
-        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
-        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
-        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
-
-
         ckRopeLift.testLift(ckController.getTriggerAxis(GenericHID.Hand.kRight));
-        if (ckController.getBumper(GenericHID.Hand.kRight)){
+        if (ckController.getBumper(GenericHID.Hand.kRight)) {
             ckGearArm.firePiston();
         }
-        if (ckController.getBumper(GenericHID.Hand.kLeft)){
+        if (ckController.getBumper(GenericHID.Hand.kLeft)) {
             ckGearArm.closePiston();
         }
-
-
-
-
 
         if (runningThread != null) {
             if (runningThread.getStatus() == CANCELLED || runningThread.getStatus() == FINISHED || runningThread.getStatus() == DEAD) {
@@ -91,10 +82,9 @@ public class Robot2017 extends IterativeRobot {
                 ckDriveTrain.resetSensors();
                 runningThread = ckDriveTrain.driveForwardCheckCollision(84);
                 new Thread(runningThread).start();
-            } else if (ckController.getAButton()){
+            } else if (ckController.getAButton()) {
                 ckDriveTrain.resetSensors();
-            }
-            else {
+            } else {
                 ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
                 ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
                 ckDriveTrain.teleDrive(-ckController.getY(GenericHID.Hand.kLeft), -ckController.getX(GenericHID.Hand.kRight));
@@ -110,8 +100,6 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void autonomousInit() {
         autoSelected = chooser.getSelected();
-        // autoSelected = SmartDashboard.getString("Auto Selector",
-        // defaultAuto);
         System.out.println("Auto selected: " + autoSelected);
     }
 
@@ -151,24 +139,22 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void testInit() {
-        super.testInit();
-
-        //VictorSP testing = new VictorSP(2);
-
-
     }
 
     @Override
     public void testPeriodic() {
-        while (isTest()) {
-            super.testPeriodic();
-            LiveWindow.run();
-            ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.1);
-            ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0.1);
-            teleopPeriodic();
-            Timer.delay(0.005);
-        }
-        ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-        ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+        LiveWindow.run();
+
+        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
+        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
+        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
+
+        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
+        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
+        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
+        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
+        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
+
+        teleopPeriodic();
     }
 }
