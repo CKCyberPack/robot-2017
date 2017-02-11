@@ -13,26 +13,33 @@ public abstract class RobotMap {
     public static int notComplete = 0;
 
     //PWM outputs
-    public static int pwmLeftFrontDrive = 1;
-    public static int pwmRightFrontDrive = 2;
-    public static int pwmLeftBackDrive = 0;
-    public static int pwmRightBackDrive = 3;
-    public static int pwmRopeMotor = 4;
+    public static int pwmLeftFrontDrive = 2;
+    public static int pwmRightFrontDrive = 3;
+    public static int pwmLeftBackDrive = 1;
+    public static int pwmRightBackDrive = 4;
+    public static int pwmRopeMotor = 5;
 
     //Digital Inputs
     public static int encoderA = 0;
     public static int encoderB = 1;
     public static SerialPort.Port portNavx = SerialPort.Port.kUSB;
 
-
     //Pneumatic Controller Module
-    public static int pcmPiston = 0;
+    public static int pcmPiston = 4;
     public static int pcmLEDCamera = 1;
     public static int pcmLEDRed = 2;
     public static int pcmLEDBlue = 3;
     public static int pcmCompressor = 4;
 
+    //Motor PDP Inputs
+    public static int pdpLeftFrontDrive = 0;
+    public static int pdpRightFrontDrive = 1;
+    public static int pdpLeftBackDrive = 15;
+    public static int pdpRightBackDrive = 2;
+    public static int pdpRopeMotor = 3;
+
     //Robot Dependent Variables
+    public static double driveDeadzone = 0.2;
     public static float maxCollisionG = 0.5f;
     public static double slowSpeed = 0.4;
     public static double encoderDistance = 6 * Math.PI / 360;

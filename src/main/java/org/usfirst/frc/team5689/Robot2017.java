@@ -1,9 +1,6 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +15,9 @@ public class Robot2017 extends IterativeRobot {
     SendableChooser<String> chooser = new SendableChooser<>();
     XboxController ckController;
     DriveTrain ckDriveTrain;
+    RopeLift ckRopeLift;
+    GearArm ckGearArm;
+    PowerDistributionPanel ckPDP;
     private DriveRunnable runningThread = null;
     private boolean yPress;
 
@@ -32,6 +32,9 @@ public class Robot2017 extends IterativeRobot {
 
         ckController = new XboxController(0);
         ckDriveTrain = new DriveTrain();
+        ckRopeLift = new RopeLift();
+        ckGearArm = new GearArm();
+        ckPDP = new PowerDistributionPanel();
     }
 
     @Override
@@ -51,6 +54,26 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
         SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
         SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
+
+        SmartDashboard.putNumber("Current: Total", ckPDP.getTotalCurrent());
+        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
+        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
+        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
+        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
+        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
+
+
+        ckRopeLift.testLift(ckController.getTriggerAxis(GenericHID.Hand.kRight));
+        if (ckController.getBumper(GenericHID.Hand.kRight)){
+            ckGearArm.firePiston();
+        }
+        if (ckController.getBumper(GenericHID.Hand.kLeft)){
+            ckGearArm.closePiston();
+        }
+
+
+
+
 
         if (runningThread != null) {
             if (runningThread.getStatus() == CANCELLED || runningThread.getStatus() == FINISHED || runningThread.getStatus() == DEAD) {

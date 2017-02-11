@@ -38,6 +38,13 @@ public class DriveTrain {
 
 
     public void teleDrive(double forward, double rotate) {
+        if (Math.abs(forward) < RobotMap.driveDeadzone){
+            forward = 0;
+        }
+
+        if (Math.abs(rotate) < RobotMap.driveDeadzone){
+            rotate = 0;
+        }
         ckDrive.arcadeDrive(forward, rotate);
     }
 
