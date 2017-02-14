@@ -107,7 +107,7 @@ public class Robot2017 extends IterativeRobot {
                 new Thread(runningThread).start();
             } else if (ckController.getXButton()) {
                 ckDriveTrain.resetSensors();
-                runningThread = ckDriveTrain.driveForwardCheckCollision(84);
+                runningThread = ckDriveTrain.driveToGear();
                 new Thread(runningThread).start();
             } else if (ckController.getAButton()) {
                 ckDriveTrain.resetSensors();

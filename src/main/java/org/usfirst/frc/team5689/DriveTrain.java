@@ -17,8 +17,6 @@ public class DriveTrain {
     RobotDrive ckDrive;
     Encoder ckEncoder;
     AHRS ckNavX;
-    boolean firstLoop;
-    boolean collisionDetected;
 
     public DriveTrain() {
         leftFrontMotor = new VictorSP(RobotMap.pwmLeftFrontDrive);
@@ -50,8 +48,13 @@ public class DriveTrain {
 
 
     public void resetSensors() {
-        ckNavX.reset();
         ckEncoder.reset();
+        resetGyro();
+    }
+
+    public void resetGyro(){
+        ckNavX.reset();
+        Timer.delay(0.1); //Give the Gyro time to reset
     }
 
     public DriveRunnable drive(double distance) {
@@ -109,7 +112,46 @@ public class DriveTrain {
         return drive(distance, true);
     }
 
-    //TODO - Make a drive that Jitters from +-5 degrees
+    public DriveRunnable driveToGear(){
+        return new DriveRunnable() {
+            float maxY;
+            double targetAngle;
+
+            private void readNav() {
+                if (ckNavX.getWorldLinearAccelY() < maxY) {
+                    maxY = ckNavX.getWorldLinearAccelY();
+                }
+            }
+
+            public void run() {
+                setStatus(Status.RUNNING);
+                boolean collision = false;
+                targetAngle = RobotMap.gyroGitterAngle;
+                double turnAmount = 1;
+
+                while (!isCancelled() && !collision) {
+                    if (ckNavX.getAngle() > targetAngle){
+                        targetAngle = -1 * RobotMap.gyroGitterAngle;
+                        turnAmount = 75;
+                    }else if (ckNavX.getAngle() < targetAngle){
+                        targetAngle = RobotMap.gyroGitterAngle;
+                        turnAmount = -75;
+                    }
+
+                    ckDrive.arcadeDrive(.5, turnAmount);
+                    readNav();
+                    if (maxY < -RobotMap.maxCollisionG) collision = true;
+
+                    Timer.delay(0.05);
+                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
+                    SmartDashboard.putNumber("Target Angle", targetAngle);
+                }
+
+                ckDrive.stopMotor();
+                setStatus(isCancelled() ? CANCELLED : collision ? DEAD : FINISHED);
+            }
+        };
+    }
 
     public DriveRunnable turn(double targetAngle) {
         return new DriveRunnable() {
