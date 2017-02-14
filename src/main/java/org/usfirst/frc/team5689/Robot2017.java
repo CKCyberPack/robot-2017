@@ -26,6 +26,7 @@ public class Robot2017 extends IterativeRobot {
     //Variables
     private DriveRunnable runningThread = null;
     private boolean overrideSafety = false;
+    private boolean startPressed = false;
 
     @Override
     public void robotInit() {
@@ -97,8 +98,16 @@ public class Robot2017 extends IterativeRobot {
 
         //****Vision LED
         if (ckController.getStartButton()) {
-            ckLED.toggleVision();
+            if (!startPressed);
+            {
+                ckLED.toggleVision();
+                startPressed = true;
+            }
 
+        }
+        else
+        {
+            startPressed = false;
         }
 
         //****Drive Train Auto-Drive
