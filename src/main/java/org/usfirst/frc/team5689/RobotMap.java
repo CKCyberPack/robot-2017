@@ -26,7 +26,7 @@ public abstract class RobotMap {
 
     //Pneumatic Controller Module
     public static int pcmPiston = 4;
-    public static int pcmLEDCamera = 1;
+    public static int pcmLEDCamera = 0;
     public static int pcmLEDRed = 2;
     public static int pcmLEDBlue = 3;
     public static int pcmCompressor = 4;

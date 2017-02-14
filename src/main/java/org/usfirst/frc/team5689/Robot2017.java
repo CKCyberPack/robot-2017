@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5689;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +20,7 @@ public class Robot2017 extends IterativeRobot {
     private DriveTrain ckDriveTrain;
     private RopeLift ckRopeLift;
     private GearArm ckGearArm;
+    private LED ckLED;
     private PowerDistributionPanel ckPDP;
 
     //Variables
@@ -42,7 +42,9 @@ public class Robot2017 extends IterativeRobot {
         ckDriveTrain = new DriveTrain();
         ckRopeLift = new RopeLift();
         ckGearArm = new GearArm();
+        ckLED = new LED();
         ckPDP = new PowerDistributionPanel();
+        CameraServer.getInstance().startAutomaticCapture();
     }
 
     @Override
@@ -50,11 +52,11 @@ public class Robot2017 extends IterativeRobot {
     }
 
     @Override
-    public void disabledInit(){
+    public void disabledInit() {
     }
 
     @Override
-    public void disabledPeriodic(){
+    public void disabledPeriodic() {
     }
 
     @Override
@@ -64,10 +66,10 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         //****Set Safety
-        if (ckController.getTriggerAxis(GenericHID.Hand.kLeft) > 0){
+        if (ckController.getTriggerAxis(GenericHID.Hand.kLeft) > 0) {
             overrideSafety = true;
             ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.75);
-        }else{
+        } else {
             overrideSafety = false;
             ckController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
         }
@@ -75,11 +77,11 @@ public class Robot2017 extends IterativeRobot {
         //****Rope Lift
         if (overrideSafety) {
             ckRopeLift.dangerClimb(ckController.getTriggerAxis(GenericHID.Hand.kRight));
-        }else{
+        } else {
             ckRopeLift.safeClimb(ckController.getTriggerAxis(GenericHID.Hand.kRight), ckPDP);
         }
         //Clear Over Current
-        if (ckController.getTriggerAxis(GenericHID.Hand.kRight) == 0){
+        if (ckController.getTriggerAxis(GenericHID.Hand.kRight) == 0) {
             ckRopeLift.clearOverCurrent();
         }
 
@@ -93,6 +95,14 @@ public class Robot2017 extends IterativeRobot {
             ckController.setRumble(GenericHID.RumbleType.kRightRumble, 0);
         }
 
+        //****Vision LED
+        if (ckController.getStartButton()) {
+            ckLED.onLED();
+
+        }
+        if (ckController.getBackButton()) {
+            ckLED.offLED();
+        }
 
         //****Drive Train Auto-Drive
         if (runningThread != null) {
