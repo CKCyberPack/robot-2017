@@ -11,7 +11,7 @@ public class LED {
         visionStatus = false;
     }
 
-    public void visonOn() {
+    public void visionOn() {
         visionLED.set(true);
         visionStatus = true;
     }
@@ -25,9 +25,9 @@ public class LED {
 
     public void toggleVision() {
         if (visionStatus) {
-            visonOn();
-        } else {
             visionOff();
+        } else {
+            visionOn();
         }
     }
 }

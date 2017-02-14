@@ -98,15 +98,11 @@ public class Robot2017 extends IterativeRobot {
 
         //****Vision LED
         if (ckController.getStartButton()) {
-            if (!startPressed);
-            {
+            if (!startPressed) {
                 ckLED.toggleVision();
                 startPressed = true;
             }
-
-        }
-        else
-        {
+        } else {
             startPressed = false;
         }
 
