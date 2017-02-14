@@ -97,11 +97,8 @@ public class Robot2017 extends IterativeRobot {
 
         //****Vision LED
         if (ckController.getStartButton()) {
-            ckLED.onLED();
+            ckLED.toggleVision();
 
-        }
-        if (ckController.getBackButton()) {
-            ckLED.offLED();
         }
 
         //****Drive Train Auto-Drive
