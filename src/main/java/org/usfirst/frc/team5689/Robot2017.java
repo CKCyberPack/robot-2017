@@ -4,6 +4,12 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.opencv.core.Mat;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import org.opencv.imgproc.Imgproc;
+
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
@@ -44,7 +50,24 @@ public class Robot2017 extends IterativeRobot {
         ckGearArm = new GearArm();
         ckLED = new LED();
         ckPDP = new PowerDistributionPanel();
-        CameraServer.getInstance().startAutomaticCapture();
+
+        //Vision Subsystem
+        new Thread(() -> {
+            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
+
+            CvSink cvSink = CameraServer.getInstance().getVideo();
+            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", 640, 480);
+
+            Mat source = new Mat();
+            Mat output = new Mat();
+
+            while(!Thread.interrupted()) {
+                cvSink.grabFrame(source);
+                //Imgproc.boundingRect();
+                outputStream.putFrame(output);
+            }
+        }).start();
     }
 
     @Override
