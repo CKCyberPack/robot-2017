@@ -58,5 +58,5 @@ public abstract class RobotMap {
     public static double gyroTurnMax = 0.9;
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 1; //Number of degrees off by
-    public static double gyroGitterAngle = 5;
+    public static double gyroJitterAngle = 5;
 }

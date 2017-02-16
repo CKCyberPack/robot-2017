@@ -126,15 +126,15 @@ public class DriveTrain {
             public void run() {
                 setStatus(Status.RUNNING);
                 boolean collision = false;
-                targetAngle = RobotMap.gyroGitterAngle;
+                targetAngle = RobotMap.gyroJitterAngle;
                 double turnAmount = 1;
 
                 while (!isCancelled() && !collision) {
                     if (ckNavX.getAngle() > targetAngle){
-                        targetAngle = -1 * RobotMap.gyroGitterAngle;
+                        targetAngle = -1 * RobotMap.gyroJitterAngle;
                         turnAmount = 75;
                     }else if (ckNavX.getAngle() < targetAngle){
-                        targetAngle = RobotMap.gyroGitterAngle;
+                        targetAngle = RobotMap.gyroJitterAngle;
                         turnAmount = -75;
                     }
 
