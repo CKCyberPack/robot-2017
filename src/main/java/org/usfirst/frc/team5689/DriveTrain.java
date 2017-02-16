@@ -194,7 +194,7 @@ public class DriveTrain {
                     SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
                     SmartDashboard.putNumber("Turn Amount", turnAmount);
 
-                    ckDrive.arcadeDrive(RobotMap.gyroStraightSpeed, -turnAmount);
+                    ckDrive.arcadeDrive(0, -turnAmount);
                     if (!reached) {
                         if (Math.abs(error) < RobotMap.gyroTolerance) {
                             reached = true;
