@@ -7,14 +7,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
-    //Autonomous Selector
-    private String autoSelected;
-    private SendableChooser<String> chooser;
     private final static String defaultAuto = "default";
     private final static String leftGear = "left_gear";
     private final static String rightGear = "right_gear";
     private final static String centerGear = "center_gear";
-
+    //Autonomous Selector
+    private String autoSelected;
+    private SendableChooser<String> chooser;
     //Components
     private XboxController ckController;
     private DriveTrain ckDriveTrain;
@@ -142,34 +141,53 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void autonomousPeriodic() {
+        try {
+            DriveRunnable r;
+            switch (autoSelected) {
+                case leftGear:
+                    r = ckDriveTrain.drive(84);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.turn(30);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.drive(-36);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.turn(-30);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.drive(204);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    while (isAutonomous()) Thread.sleep(100);
+                    break;
+                case rightGear:
+                    r = ckDriveTrain.drive(84);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.turn(-30);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.drive(-36);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.turn(30);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    ckDriveTrain.resetSensors();
+                    r = ckDriveTrain.drive(204);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    while (isAutonomous()) Thread.sleep(100);
+                    break;
+                case defaultAuto:
+                default:
+                    r = ckDriveTrain.drive(240);
+                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    while (isAutonomous()) Thread.sleep(100);
+                    break;
+            }
 
-        switch (autoSelected) {
-            case leftGear:
-                ckDriveTrain.drive(84);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.turn(30);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.drive(-36);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.turn(-30);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.drive(204);
-                break;
-            case rightGear:
-                ckDriveTrain.drive(84);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.turn(-30);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.drive(-36);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.turn(30);
-                ckDriveTrain.resetSensors();
-                ckDriveTrain.drive(204);
-                break;
-            case defaultAuto:
-            default:
-                ckDriveTrain.drive(240);
-                break;
+        } catch (Exception e) {
+            System.err.println("Error in auto: " + e.getMessage());
         }
 
     }
