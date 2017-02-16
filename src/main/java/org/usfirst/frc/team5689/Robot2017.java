@@ -146,42 +146,42 @@ public class Robot2017 extends IterativeRobot {
             switch (autoSelected) {
                 case leftGear:
                     r = ckDriveTrain.drive(84);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.turn(30);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.drive(-36);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.turn(-30);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.drive(204);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     while (isAutonomous()) Thread.sleep(100);
                     break;
                 case rightGear:
                     r = ckDriveTrain.drive(84);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.turn(-30);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.drive(-36);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.turn(30);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     ckDriveTrain.resetSensors();
                     r = ckDriveTrain.drive(204);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     while (isAutonomous()) Thread.sleep(100);
                     break;
                 case defaultAuto:
                 default:
                     r = ckDriveTrain.drive(240);
-                    while (r.getStatus() != FINISHED && r.getStatus() != DEAD) Thread.sleep(100);
+                    r.run();
                     while (isAutonomous()) Thread.sleep(100);
                     break;
             }
