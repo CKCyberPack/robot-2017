@@ -239,6 +239,8 @@ public class Robot2017 extends IterativeRobot {
     public void testPeriodic() {
         //LiveWindow.run();
 
+        imgProcReq = true;
+
         SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
         SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
         SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
