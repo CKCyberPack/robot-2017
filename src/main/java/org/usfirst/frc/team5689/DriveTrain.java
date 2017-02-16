@@ -43,6 +43,7 @@ public class DriveTrain {
         if (Math.abs(rotate) < RobotMap.driveDeadzone){
             rotate = 0;
         }
+        rotate *= Math.abs(rotate);
         ckDrive.arcadeDrive(forward, rotate);
     }
 
