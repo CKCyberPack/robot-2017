@@ -1,14 +1,16 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.opencv.core.Mat;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
@@ -27,11 +29,13 @@ public class Robot2017 extends IterativeRobot {
     private GearArm ckGearArm;
     private LED ckLED;
     private PowerDistributionPanel ckPDP;
-
+    private GripPipeline pipeline;
+    private List<Rect> points = new ArrayList<>();
     //Variables
     private DriveRunnable runningThread = null;
     private boolean overrideSafety = false;
     private boolean startPressed = false;
+    private boolean imgProcReq = false;
 
     @Override
     public void robotInit() {
@@ -51,21 +55,33 @@ public class Robot2017 extends IterativeRobot {
         ckLED = new LED();
         ckPDP = new PowerDistributionPanel();
 
-        //Vision Subsystem
-        new Thread(() -> {
+        pipeline = new GripPipeline();
+
+        new DaemonThread(() ->
+        {
             UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
             camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
 
             CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", 640, 480);
+            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", RobotMap.cameraWidth, RobotMap.cameraHeight);
 
             Mat source = new Mat();
             Mat output = new Mat();
 
-            while(!Thread.interrupted()) {
+            List<MatOfPoint> tPoints;
+
+            while (!Thread.interrupted()) {
                 cvSink.grabFrame(source);
-                //Imgproc.boundingRect();
-                outputStream.putFrame(output);
+                if (imgProcReq) {
+                    pipeline.process(source);
+                    tPoints = pipeline.findContoursOutput();
+                    tPoints.forEach(p -> points.add(Imgproc.boundingRect(p)));
+                    imgProcReq = false;
+                }
+                output = source;
+                Mat finalOutput = output;
+                points.forEach(p -> Imgproc.rectangle(finalOutput, new Point(p.x, p.y), new Point(p.x + p.width, p.y + p.height), new Scalar(255, 0, 255), 4));
+                outputStream.putFrame(finalOutput);
             }
         }).start();
     }
@@ -234,5 +250,12 @@ public class Robot2017 extends IterativeRobot {
         SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
 
         teleopPeriodic();
+    }
+
+    private class DaemonThread extends Thread {
+        public DaemonThread(Runnable r) {
+            super(r);
+            setDaemon(true);
+        }
     }
 }
