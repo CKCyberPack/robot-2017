@@ -2,6 +2,7 @@ package org.usfirst.frc.team5689;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,13 +58,12 @@ public class Robot2017 extends IterativeRobot {
 
         pipeline = new GripPipeline();
 
-        new DaemonThread(() ->
-        {
+        new DaemonThread(() -> {
             UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
             camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
 
             CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", RobotMap.cameraWidth, RobotMap.cameraHeight);
+            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", RobotMap.cameraWidth,  RobotMap.cameraHeight);
 
             Mat source = new Mat();
             Mat output = new Mat();
@@ -74,6 +74,7 @@ public class Robot2017 extends IterativeRobot {
                 cvSink.grabFrame(source);
                 if (imgProcReq) {
                     pipeline.process(source);
+                    points.clear();
                     tPoints = pipeline.findContoursOutput();
                     tPoints.forEach(p -> points.add(Imgproc.boundingRect(p)));
                     imgProcReq = false;
@@ -142,6 +143,10 @@ public class Robot2017 extends IterativeRobot {
             }
         } else {
             startPressed = false;
+        }
+
+        if (ckController.getBackButton()){
+            imgProcReq = true;
         }
 
         //****Drive Train Auto-Drive
@@ -238,9 +243,6 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void testPeriodic() {
         //LiveWindow.run();
-
-        imgProcReq = true;
-
         SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
         SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
         SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());

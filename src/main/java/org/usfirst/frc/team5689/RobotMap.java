@@ -40,7 +40,7 @@ public abstract class RobotMap {
 
     //Vision Variables
     public static int cameraWidth = 640;
-    public static int cameraHeight = 320;
+    public static int cameraHeight = 480;
 
     //Robot Dependent Variables
     public static double ropeOverCurrent = 75;

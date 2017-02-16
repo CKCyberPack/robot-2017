@@ -9,6 +9,7 @@ public class LED {
     private boolean visionStatus;
     private boolean redStatus;
     private boolean blueStatus;
+    private int blinkCount;
 
     public LED() {
         visionLED = new Solenoid(RobotMap.pcmLEDCamera);
@@ -76,7 +77,30 @@ public class LED {
         }
     }
 
+    public void blinkPatternP() {
+        blinkCount++;
+        switch (blinkCount) {
+            case 1:
+            case 5:
+            case 9:
+                redOn();
+            case 3:
+            case 7:
+            case 11:
+                redOff();
+            case 15:
+            case 19:
+            case 23:
+                blueOn();
+            case 17:
+            case 21:
+            case 25:
+                blueOff();
+            case 30:
+                blinkCount = 0;
+        }
 
+    }
 }
 
 
