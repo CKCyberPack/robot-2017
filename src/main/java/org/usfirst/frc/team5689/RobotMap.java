@@ -24,12 +24,15 @@ public abstract class RobotMap {
     public static int encoderB = 1;
     public static SerialPort.Port portNavx = SerialPort.Port.kUSB;
 
+    //Relay Outputs
+    public static int relayRed = 0;
+    public static int relayBlue = 1;
+
+
     //Pneumatic Controller Module
     public static int pcmPiston = 4;
     public static int pcmLEDCamera = 0;
-    public static int pcmLEDRed = 2;
-    public static int pcmLEDBlue = 3;
-    public static int pcmCompressor = 4;
+
 
     //Motor PDP Inputs
     public static int pdpLeftFrontDrive = 0;

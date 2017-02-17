@@ -1,11 +1,12 @@
 package org.usfirst.frc.team5689;
 
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class LED {
     private Solenoid visionLED;
-    private Solenoid redLED;
-    private Solenoid blueLED;
+    private Relay redLED;
+    private Relay blueLED;
     private boolean visionStatus;
     private boolean redStatus;
     private boolean blueStatus;
@@ -13,8 +14,8 @@ public class LED {
 
     public LED() {
         visionLED = new Solenoid(RobotMap.pcmLEDCamera);
-        redLED = new Solenoid(RobotMap.pcmLEDRed);
-        blueLED = new Solenoid(RobotMap.pcmLEDBlue);
+        redLED = new Relay(RobotMap.relayRed, Relay.Direction.kBoth);
+        blueLED = new Relay(RobotMap.relayBlue, Relay.Direction.kBoth);
         visionStatus = false;
         redStatus = false;
         blueStatus = false;
@@ -41,13 +42,23 @@ public class LED {
 
     //**** Red LED
     public void redOn() {
-        redLED.set(true);
+        redLED.set(Relay.Value.kOn);
         redStatus = true;
     }
 
     public void redOff() {
-        redLED.set(false);
+        redLED.set(Relay.Value.kOff);
         redStatus = false;
+    }
+
+    public void redFront(){
+        redLED.set(Relay.Value.kForward);
+        redStatus = true;
+    }
+
+    public void redBottom(){
+        redLED.set(Relay.Value.kReverse);
+        redStatus = true;
     }
 
     public void toggleRed() {
@@ -60,13 +71,23 @@ public class LED {
 
     //**** Blue LED
     public void blueOn() {
-        blueLED.set(true);
+        blueLED.set(Relay.Value.kOn);
         blueStatus = true;
     }
 
     public void blueOff() {
-        blueLED.set(false);
+        blueLED.set(Relay.Value.kOff);
         blueStatus = false;
+    }
+
+    public void blueFront(){
+        blueLED.set(Relay.Value.kForward);
+        blueStatus = true;
+    }
+
+    public void blueBottom(){
+        blueLED.set(Relay.Value.kReverse);
+        blueStatus = true;
     }
 
     public void toggleBlue() {
@@ -99,7 +120,6 @@ public class LED {
             case 30:
                 blinkCount = 0;
         }
-
     }
 }
 
