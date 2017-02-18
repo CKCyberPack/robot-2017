@@ -22,7 +22,7 @@ public abstract class RobotMap {
     //Digital Inputs
     public static int encoderA = 0;
     public static int encoderB = 1;
-    public static SerialPort.Port portNavx = SerialPort.Port.kUSB;
+    public static SerialPort.Port portNavx = SerialPort.Port.kUSB1;
 
     //Relay Outputs
     public static int relayRed = 0;
@@ -44,6 +44,7 @@ public abstract class RobotMap {
     //Vision Variables
     public static int cameraWidth = 640;
     public static int cameraHeight = 480;
+    public static int cameraExposure = 25;
 
     //Robot Dependent Variables
     public static double ropeOverCurrent = 75;

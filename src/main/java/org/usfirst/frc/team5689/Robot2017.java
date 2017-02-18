@@ -36,6 +36,7 @@ public class Robot2017 extends IterativeRobot {
     private DriveRunnable runningThread = null;
     private boolean overrideSafety = false;
     private boolean startPressed = false;
+    private boolean ledOn = false;
     private boolean imgProcReq = false;
 
     @Override
@@ -58,12 +59,14 @@ public class Robot2017 extends IterativeRobot {
 
         pipeline = new GripPipeline();
 
+
         new DaemonThread(() -> {
             UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setExposureManual(RobotMap.cameraExposure);
             camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
 
             CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", RobotMap.cameraWidth,  RobotMap.cameraHeight);
+            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", RobotMap.cameraWidth,  RobotMap.cameraHeight);
 
             Mat source = new Mat();
             Mat output = new Mat();
@@ -101,10 +104,31 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void teleopInit() {
+        if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
+            ckLED.blueOn();
+            ckLED.redOff();
+        }else {
+            ckLED.redOn();
+            ckLED.blueOff();
+        }
     }
 
     @Override
     public void teleopPeriodic() {
+        //**** TESTING - COMMENT ME OUT!
+        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
+        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
+        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
+        SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
+        SmartDashboard.putBoolean("AHRS Connected?", ckDriveTrain.ckNavX.isConnected());
+
+
+        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
+        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
+        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
+        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
+        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
+
         //****Set Safety
         if (ckController.getTriggerAxis(GenericHID.Hand.kLeft) > 0) {
             overrideSafety = true;
@@ -149,6 +173,19 @@ public class Robot2017 extends IterativeRobot {
             imgProcReq = true;
         }
 
+        //****LED
+        if (ckController.getStickButton(GenericHID.Hand.kRight)){
+            if (!ledOn){
+                ckLED.blinkPatternP();
+                ledOn = true;
+            }
+        }
+
+        if (ckController.getStickButton(GenericHID.Hand.kLeft)){
+            ckLED.blinkOff();
+            ledOn = false;
+        }
+
         //****Drive Train Auto-Drive
         if (runningThread != null) {
             if (runningThread.getStatus() == CANCELLED || runningThread.getStatus() == FINISHED || runningThread.getStatus() == DEAD) {
@@ -181,6 +218,14 @@ public class Robot2017 extends IterativeRobot {
     public void autonomousInit() {
         autoSelected = chooser.getSelected();
         System.out.println("Auto selected: " + autoSelected);
+
+        if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
+            ckLED.blueOn();
+            ckLED.redOff();
+        }else {
+            ckLED.redOn();
+            ckLED.blueOff();
+        }
     }
 
     @Override
@@ -242,21 +287,9 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void testPeriodic() {
-        //LiveWindow.run();
-        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
-        SmartDashboard.putNumber("AccelX", ckDriveTrain.ckNavX.getWorldLinearAccelX());
-        SmartDashboard.putNumber("AccelY", ckDriveTrain.ckNavX.getWorldLinearAccelY());
-
-        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
-        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
-        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
-        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
-        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
-
-        teleopPeriodic();
     }
 
-    private class DaemonThread extends Thread {
+    public static class DaemonThread extends Thread {
         public DaemonThread(Runnable r) {
             super(r);
             setDaemon(true);
