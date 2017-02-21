@@ -213,7 +213,7 @@ public class DriveTrain {
                     Timer.delay(0.05);
                 }
                 ckDrive.stopMotor();
-                setStatus(isCancelled() ? CANCELLED : FINISHED);
+                if (getStatus() == RUNNING) setStatus(FINISHED);
             }
         };
     }
@@ -221,13 +221,15 @@ public class DriveTrain {
     public DriveRunnable dumbTurn(double targetAngle) {
         return new DriveRunnable() {
             public void run() {
+                setStatus(RUNNING);
                 double error = targetAngle - ckNavX.getAngle();
                 while (Math.abs(error - ckNavX.getAngle()) > RobotMap.dumbTurnErrorTolerance && !isCancelled()) {
                     boolean left = error < 0;
                     ckDrive.arcadeDrive(0, (left ? 1D : -1D) * RobotMap.dumbTurn);
-                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
                     Timer.delay(0.05);
+                    error = targetAngle - ckNavX.getAngle();
                 }
+                if (getStatus() == RUNNING) setStatus(FINISHED);
                 ckDrive.stopMotor();
             }
         };
@@ -239,9 +241,13 @@ public class DriveTrain {
                 setStatus(RUNNING);
                 double initAngle = ckNavX.getAngle();
                 long endTime = (long) (System.currentTimeMillis() + (seconds * 1000));
+                double error = initAngle - ckNavX.getAngle();
                 while (System.currentTimeMillis() < endTime && !isCancelled()) {
-
+                    ckDrive.arcadeDrive(RobotMap.gyroStraightSpeed, error * RobotMap.gyroStraightKp);
+                    Timer.delay(0.05);
+                    error = initAngle - ckNavX.getAngle();
                 }
+                if (getStatus() == RUNNING) setStatus(FINISHED);
             }
         };
     }
