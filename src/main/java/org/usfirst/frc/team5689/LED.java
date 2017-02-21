@@ -25,11 +25,13 @@ public class LED {
     public void visionOn() {
         visionLED.set(true);
         visionStatus = true;
+        Robot2017.imgProcReq = true;
     }
 
     public void visionOff() {
         visionLED.set(false);
         visionStatus = false;
+        Robot2017.imgProcReq = false;
     }
 
     public void toggleVision() {

@@ -20,6 +20,10 @@ public abstract class DriveRunnable implements Runnable {
         return cancelled;
     }
 
+    public void start() {
+        new Thread(this).start();
+    }
+
     public final void cancel() {
         cancelled = true;
         setStatus(CANCELLED);

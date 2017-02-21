@@ -1,20 +1,10 @@
 package org.usfirst.frc.team5689;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.HashMap;
-
-import org.opencv.core.*;
-import org.opencv.core.Core.*;
-import org.opencv.features2d.FeatureDetector;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.*;
-import org.opencv.objdetect.*;
 
 /**
  * GripPipeline class.
@@ -25,14 +15,14 @@ import org.opencv.objdetect.*;
  */
 public class GripPipeline {
 
+	static {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+
 	//Outputs
 	private Mat hslThresholdOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
-
-	static {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-	}
 
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
@@ -51,8 +41,8 @@ public class GripPipeline {
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
 		// Step Filter_Contours0:
-		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 100.0;
+		/*ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
+		double filterContoursMinArea = 75.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 5.0;
 		double filterContoursMaxWidth = 1000.0;
@@ -62,8 +52,8 @@ public class GripPipeline {
 		double filterContoursMaxVertices = 10000.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;
-		double filterContoursMaxRatio = 1000.0;
-		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
+		double filterContoursMaxRatio = 1000.0;*/
+		//filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
 

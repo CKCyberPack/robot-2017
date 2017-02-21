@@ -7,11 +7,6 @@ import edu.wpi.first.wpilibj.SerialPort;
  */
 public abstract class RobotMap {
 
-    //Global
-    public static int completeGood = 1;
-    public static int completeBad = -1;
-    public static int notComplete = 0;
-
     //PWM outputs
     public static int pwmLeftFrontDrive = 2;
     public static int pwmRightFrontDrive = 3;
@@ -22,7 +17,7 @@ public abstract class RobotMap {
     //Digital Inputs
     public static int encoderA = 0;
     public static int encoderB = 1;
-    public static SerialPort.Port portNavx = SerialPort.Port.kUSB1;
+    public static SerialPort.Port portNavx = SerialPort.Port.kUSB2;
 
     //Relay Outputs
     public static int relayRed = 0;
@@ -42,8 +37,8 @@ public abstract class RobotMap {
     public static int pdpRopeMotor = 3;
 
     //Vision Variables
-    public static int cameraWidth = 640;
-    public static int cameraHeight = 480;
+    public static int cameraWidth = 640 / 2;
+    public static int cameraHeight = 480 / 2;
     public static int cameraExposure = 25;
 
     //Robot Dependent Variables
@@ -63,4 +58,9 @@ public abstract class RobotMap {
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 1; //Number of degrees off by
     public static double gyroJitterAngle = 5;
+    public static double visionTurn = 0.3;
+    public static double visionForward = 0.6;
+    public static double visionMaxG = 0.4;
+    public static double dumbTurn = 0.5;
+    public static double dumbTurnErrorTolerance = 2;
 }

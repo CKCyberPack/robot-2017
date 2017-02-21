@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5689;
 
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,7 +12,8 @@ public class DriveTrain {
     VictorSP rightBackMotor;
     RobotDrive ckDrive;
     Encoder ckEncoder;
-    AHRS ckNavX;
+    ADXRS450_Gyro ckNavX;
+    BuiltInAccelerometer ckRioAcc;
 
 
     public DriveTrain() {
@@ -26,7 +26,8 @@ public class DriveTrain {
         ckEncoder.setDistancePerPulse(RobotMap.encoderDistance);
         ckEncoder.setReverseDirection(true);
         ckEncoder.setMinRate(RobotMap.encoderStopSpeed);
-        ckNavX = new AHRS(RobotMap.portNavx);
+        ckNavX = new ADXRS450_Gyro();
+        ckRioAcc = new BuiltInAccelerometer();
 //        if (!ckNavX.isConnected()){
 //
 //        }
@@ -65,11 +66,11 @@ public class DriveTrain {
 
     public DriveRunnable drive(final double distance, final boolean collisionDetection) {
         return new DriveRunnable() {
-            float maxY;
+            double maxX;
 
             private void readNav() {
-                if (ckNavX.getWorldLinearAccelY() < maxY) {
-                    maxY = ckNavX.getWorldLinearAccelY();
+                if (ckRioAcc.getY() > maxX) {
+                    maxX = ckRioAcc.getY();
                 }
             }
 
@@ -82,7 +83,7 @@ public class DriveTrain {
                     ckDrive.arcadeDrive(1, turnAmount);
                     if (collisionDetection) {
                         readNav();
-                        if (maxY < -RobotMap.maxCollisionG) collision = true;
+                        if (maxX > RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
                     SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
@@ -97,7 +98,7 @@ public class DriveTrain {
                     ckDrive.arcadeDrive(RobotMap.slowSpeed, turnAmount);
                     if (collisionDetection) {
                         readNav();
-                        if (maxY < -RobotMap.maxCollisionG) collision = true;
+                        if (maxX > RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
                     SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
@@ -116,12 +117,12 @@ public class DriveTrain {
 
     public DriveRunnable driveToGear(){
         return new DriveRunnable() {
-            float maxY;
+            double maxX;
             double targetAngle;
 
             private void readNav() {
-                if (ckNavX.getWorldLinearAccelY() < maxY) {
-                    maxY = ckNavX.getWorldLinearAccelY();
+                if (ckRioAcc.getX() > maxX) {
+                    maxX = ckRioAcc.getX();
                 }
             }
 
@@ -142,7 +143,7 @@ public class DriveTrain {
 
                     ckDrive.arcadeDrive(.5, turnAmount);
                     readNav();
-                    if (maxY < -RobotMap.maxCollisionG) collision = true;
+                    if (maxX > RobotMap.maxCollisionG) collision = true;
 
                     Timer.delay(0.05);
                     SmartDashboard.putNumber("Target Angle", targetAngle);
@@ -213,6 +214,79 @@ public class DriveTrain {
                 }
                 ckDrive.stopMotor();
                 setStatus(isCancelled() ? CANCELLED : FINISHED);
+            }
+        };
+    }
+
+    public DriveRunnable dumbTurn(double targetAngle) {
+        return new DriveRunnable() {
+            public void run() {
+                double error = targetAngle - ckNavX.getAngle();
+                while (Math.abs(error - ckNavX.getAngle()) > RobotMap.dumbTurnErrorTolerance && !isCancelled()) {
+                    boolean left = error < 0;
+                    ckDrive.arcadeDrive(0, (left ? 1D : -1D) * RobotMap.dumbTurn);
+                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
+                    Timer.delay(0.05);
+                }
+                ckDrive.stopMotor();
+            }
+        };
+    }
+
+    public DriveRunnable timedGyroLock(double seconds) {
+        return new DriveRunnable() {
+            public void run() {
+                setStatus(RUNNING);
+                double initAngle = ckNavX.getAngle();
+                long endTime = (long) (System.currentTimeMillis() + (seconds * 1000));
+                while (System.currentTimeMillis() < endTime && !isCancelled()) {
+
+                }
+            }
+        };
+    }
+
+    public DriveRunnable driveVision() {
+        return new DriveRunnable() {
+            private double maxX;
+
+            private void readAccel() {
+                if (ckRioAcc.getX() > maxX) {
+                    maxX = ckRioAcc.getX();
+                }
+            }
+
+            public void run() {
+                setStatus(RUNNING);
+                Robot2017.imgProcReq = true;
+                Robot2017.ckLED.visionOn();
+                new Robot2017.DaemonThread(() -> {
+                    try {
+                        while (getStatus() == RUNNING) {
+                            Thread.sleep(50);
+                            Robot2017.imgProcReq = true;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }).start();
+                new Robot2017.DaemonThread(() -> {
+                    Timer.delay(0.25);
+                    while (getStatus() == RUNNING) {
+                        readAccel();
+                        Timer.delay(0.05);
+                    }
+                }).start();
+                while (getStatus() == RUNNING) {
+                    double center = (RobotMap.cameraWidth / 2) + (30 * (Robot2017.left ? 1 : -1));
+                    double turn = (Robot2017.mw < center ? 1D : -1D) * RobotMap.visionTurn;
+                    System.out.println(Robot2017.mw - center);
+                    ckDrive.arcadeDrive(RobotMap.visionForward, turn);
+                    Timer.delay(0.05);
+                    SmartDashboard.putNumber("MaxG", maxX);
+                    if (maxX > RobotMap.visionMaxG) setStatus(FINISHED);
+                }
+                Robot2017.ckLED.visionOff();
+                Robot2017.imgProcReq = false;
             }
         };
     }
