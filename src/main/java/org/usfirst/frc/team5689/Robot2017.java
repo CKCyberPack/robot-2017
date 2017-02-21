@@ -18,7 +18,8 @@ public class Robot2017 extends IterativeRobot {
     private final static String defaultAuto = "default";
     private final static String leftGear = "left_gear";
     private final static String rightGear = "right_gear";
-    private final static String centerGear = "center_gear";
+    private final static String centerGearLeft = "center_gear_left";
+    private final static String centerGearRight = "center_gear_right";
     public static LED ckLED;
     public static boolean imgProcReq = false;
     public static Rect[] visionBiggest = new Rect[2];
@@ -49,7 +50,8 @@ public class Robot2017 extends IterativeRobot {
         chooser.addDefault("Drive Straight", defaultAuto);
         chooser.addObject("Left Gear", leftGear);
         chooser.addObject("Right Gear", rightGear);
-        chooser.addObject("Center Gear", centerGear);
+        chooser.addObject("Center Gear Left", centerGearLeft);
+        chooser.addObject("Center Gear Right", centerGearRight);
         SmartDashboard.putData("Auto choices", chooser);
 
         //Subsystems
@@ -293,39 +295,57 @@ public class Robot2017 extends IterativeRobot {
                     case leftGear:
                         ckDriveTrain.resetSensors();
                         ckLED.visionOn();
-                        ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        Timer.delay(1.5);
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
+                        r.runSync();
                         ckDriveTrain.ckDrive.stopMotor();
                         r = ckDriveTrain.dumbTurn(-30);
-                        r.run();
+                        r.runSync();
                         Timer.delay(0.3);
                         gear();
                         r = ckDriveTrain.dumbTurn(0);
-                        r.run();
-                        Timer.delay(0.3);
+                        r.runSync();
                         r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        Timer.delay(1.5);
+                        r.runSync();
                         autoDone = true;
                         break;
                     case rightGear:
                         ckDriveTrain.resetSensors();
                         ckLED.visionOn();
-                        ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        Timer.delay(1.5);
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
+                        r.runSync();
                         ckDriveTrain.ckDrive.stopMotor();
                         r = ckDriveTrain.dumbTurn(30);
-                        r.run();
+                        r.runSync();
                         Timer.delay(0.3);
                         gear();
                         r = ckDriveTrain.dumbTurn(0);
-                        r.run();
-                        Timer.delay(0.3);
+                        r.runSync();
                         r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        Timer.delay(1.5);
+                        r.runSync();
                         autoDone = true;
                         break;
-                    case centerGear:
+                    case centerGearLeft:
                         gear();
+                        r = ckDriveTrain.turn(-90);
+                        r.runSync();
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
+                        r.runSync();
+                        r = ckDriveTrain.turn(0);
+                        r.runSync();
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        r.runSync();
+                        autoDone = true;
+                        break;
+                    case centerGearRight:
+                        gear();
+                        r = ckDriveTrain.turn(90);
+                        r.runSync();
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, 90);
+                        r.runSync();
+                        r = ckDriveTrain.turn(0);
+                        r.runSync();
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        r.runSync();
                         autoDone = true;
                         break;
                     case defaultAuto:

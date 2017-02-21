@@ -29,6 +29,10 @@ public abstract class DriveRunnable implements Runnable {
         setStatus(CANCELLED);
     }
 
+    public void runSync() {
+        this.run();
+    }
+
     enum Status {
         PENDING,
         RUNNING,
