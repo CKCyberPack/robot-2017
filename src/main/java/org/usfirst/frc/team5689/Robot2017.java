@@ -309,15 +309,19 @@ public class Robot2017 extends IterativeRobot {
                         break;
                     case rightGear:
                         ckDriveTrain.resetSensors();
-                        ckDriveTrain.teleDrive(RobotMap.visionForward, 0);
-                        Timer.delay(1);
+                        ckLED.visionOn();
+                        ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
+                        Timer.delay(1.5);
                         ckDriveTrain.ckDrive.stopMotor();
-                        r = ckDriveTrain.turn(30);
+                        r = ckDriveTrain.dumbTurn(30);
                         r.run();
+                        Timer.delay(0.3);
                         gear();
-                        r = ckDriveTrain.turn(0);
+                        r = ckDriveTrain.dumbTurn(0);
                         r.run();
-                        ckDriveTrain.resetSensors();
+                        Timer.delay(0.3);
+                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
+                        Timer.delay(1.5);
                         autoDone = true;
                         break;
                     case centerGear:
