@@ -350,9 +350,8 @@ public class Robot2017 extends IterativeRobot {
                         break;
                     case defaultAuto:
                     default:
-                        r = ckDriveTrain.drive(240);
-                        r.run();
-                        while (isAutonomous()) Thread.sleep(100);
+                        gear();
+                        autoDone = true;
                         break;
                 }
 
@@ -373,7 +372,6 @@ public class Robot2017 extends IterativeRobot {
         }
         if (r.getStatus() != FINISHED) {
             ckDriveTrain.ckDrive.stopMotor();
-            autoDone = true;
             imgProcReq = false;
             return;
         }
