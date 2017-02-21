@@ -235,17 +235,16 @@ public class DriveTrain {
         };
     }
 
-    public DriveRunnable timedGyroLock(double seconds) {
+    public DriveRunnable timedGyroLock(double speed, double seconds, double targetAngle) {
         return new DriveRunnable() {
             public void run() {
                 setStatus(RUNNING);
-                double initAngle = ckNavX.getAngle();
                 long endTime = (long) (System.currentTimeMillis() + (seconds * 1000));
-                double error = initAngle - ckNavX.getAngle();
+                double error = targetAngle - ckNavX.getAngle();
                 while (System.currentTimeMillis() < endTime && !isCancelled()) {
-                    ckDrive.arcadeDrive(RobotMap.gyroStraightSpeed, error * RobotMap.gyroStraightKp);
+                    ckDrive.arcadeDrive(speed, error * RobotMap.gyroStraightKp);
                     Timer.delay(0.05);
-                    error = initAngle - ckNavX.getAngle();
+                    error = targetAngle - ckNavX.getAngle();
                 }
                 if (getStatus() == RUNNING) setStatus(FINISHED);
             }
