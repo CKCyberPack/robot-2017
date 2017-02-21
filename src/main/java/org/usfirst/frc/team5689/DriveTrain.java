@@ -223,7 +223,7 @@ public class DriveTrain {
             public void run() {
                 setStatus(RUNNING);
                 double error = targetAngle - ckNavX.getAngle();
-                while (Math.abs(error - ckNavX.getAngle()) > RobotMap.dumbTurnErrorTolerance && !isCancelled()) {
+                while (Math.abs(error - ckNavX.getAngle()) > RobotMap.dumbTurnTolerance && !isCancelled()) {
                     boolean left = error < 0;
                     ckDrive.arcadeDrive(0, (left ? 1D : -1D) * RobotMap.dumbTurn);
                     Timer.delay(0.05);
