@@ -164,15 +164,6 @@ public class Robot2017 extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         //**** TESTING - COMMENT ME OUT!
-        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
-        SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
-
-
-        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
-        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
-        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
-        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
-        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
 
         //****Set Safety
         if (ckController.getTriggerAxis(GenericHID.Hand.kLeft) > 0) {
@@ -283,6 +274,14 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void autonomousPeriodic() {
+        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
+        SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
+        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
+        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
+        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
+        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
+        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
+
         while (isAutonomous()) {
             if (autoDone) {
                 Timer.delay(1);
