@@ -61,6 +61,7 @@ public abstract class RobotMap {
     public static double visionTurn = 0.45;
     public static double visionForward = 0.6;
     public static double visionMaxG = 0.4;
+    public static double visionBeginJitter = 60;
     public static double dumbTurn = 0.5;
     public static double dumbTurnTolerance = 2;
 }
