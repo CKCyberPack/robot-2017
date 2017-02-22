@@ -83,7 +83,6 @@ public class Robot2017 extends IterativeRobot {
                 cvSink.grabFrame(source);
                 long start = System.currentTimeMillis();
                 if (imgProcReq) {
-                    imgProcReq = false;
                     points.clear();
                     pipeline.process(source);
                     tPoints = pipeline.findContoursOutput();
@@ -139,6 +138,7 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void disabledInit() {
+    	
     }
 
     @Override
@@ -147,6 +147,13 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void teleopInit() {
+    	if (runningThread != null) {
+    		runningThread.cancel();
+    		runningThread = null;
+    	}
+    	ckLED.visionOff();
+    	imgProcReq = false;
+    	
         if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
             ckLED.blueOn();
             ckLED.redOff();
@@ -209,6 +216,7 @@ public class Robot2017 extends IterativeRobot {
 
         if (ckController.getBackButton()){
             imgProcReq = true;
+            new DaemonThread(new Runnable() {public void run() {Timer.delay(0.5);imgProcReq = false;}}).start();
         }
 
         //****LED
@@ -290,67 +298,87 @@ public class Robot2017 extends IterativeRobot {
                 return;
             }
             try {
-                DriveRunnable r;
                 switch (autoSelected) {
                     case leftGear:
                         ckDriveTrain.resetSensors();
                         ckLED.visionOn();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.2, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
                         ckDriveTrain.ckDrive.stopMotor();
-                        r = ckDriveTrain.dumbTurn(-30);
-                        r.runSync();
+                        runningThread = ckDriveTrain.dumbTurn(45);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
                         Timer.delay(0.3);
                         gear();
-                        r = ckDriveTrain.dumbTurn(0);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.dumbTurn(0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 3.5, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        ckDriveTrain.ckDrive.stopMotor();
                         autoDone = true;
                         break;
                     case rightGear:
                         ckDriveTrain.resetSensors();
                         ckLED.visionOn();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.2, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
                         ckDriveTrain.ckDrive.stopMotor();
-                        r = ckDriveTrain.dumbTurn(30);
-                        r.runSync();
+                        runningThread = ckDriveTrain.dumbTurn(-45);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
                         Timer.delay(0.3);
                         gear();
-                        r = ckDriveTrain.dumbTurn(0);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.5, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.dumbTurn(0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 3.5, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        ckDriveTrain.ckDrive.stopMotor();
                         autoDone = true;
                         break;
                     case centerGearLeft:
                         gear();
-                        r = ckDriveTrain.turn(-90);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
-                        r.runSync();
-                        r = ckDriveTrain.turn(0);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.turn(-90);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.turn(0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        ckDriveTrain.ckDrive.stopMotor();
                         autoDone = true;
                         break;
                     case centerGearRight:
                         gear();
-                        r = ckDriveTrain.turn(90);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, 90);
-                        r.runSync();
-                        r = ckDriveTrain.turn(0);
-                        r.runSync();
-                        r = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
-                        r.runSync();
+                        runningThread = ckDriveTrain.turn(90);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.turn(0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        runningThread.run();
+                        while (runningThread.getStatus() == RUNNING);
+                        ckDriveTrain.ckDrive.stopMotor();
                         autoDone = true;
                         break;
                     case defaultAuto:
                     default:
                         gear();
+                        ckDriveTrain.ckDrive.stopMotor();
                         autoDone = true;
                         break;
                 }
@@ -363,14 +391,10 @@ public class Robot2017 extends IterativeRobot {
     }
 
     private void gear() {
-        DriveRunnable r = ckDriveTrain.driveVision();
-        new DaemonThread(r).start();
-        Timer.delay(0.05);
-        while (r.getStatus() == RUNNING) {
-            Timer.delay(0.1);
-            if (!isAutonomous()) r.cancel();
-        }
-        if (r.getStatus() != FINISHED) {
+        runningThread = ckDriveTrain.driveVision();
+        runningThread.run();
+        while (runningThread.getStatus() == RUNNING);
+        if (runningThread.getStatus() != FINISHED) {
             ckDriveTrain.ckDrive.stopMotor();
             imgProcReq = false;
             return;
@@ -381,6 +405,7 @@ public class Robot2017 extends IterativeRobot {
         Timer.delay(1);
         ckDriveTrain.ckDrive.stopMotor();
         ckGearArm.closePiston();
+        imgProcReq = false;
     }
 
     @Override

@@ -242,7 +242,7 @@ public class DriveTrain {
                 long endTime = (long) (System.currentTimeMillis() + (seconds * 1000));
                 double error = targetAngle - ckNavX.getAngle();
                 while (System.currentTimeMillis() < endTime && !isCancelled()) {
-                    ckDrive.arcadeDrive(speed, error * RobotMap.gyroStraightKp);
+                    ckDrive.arcadeDrive(speed, (-error) * RobotMap.gyroStraightKp);
                     Timer.delay(0.05);
                     error = targetAngle - ckNavX.getAngle();
                 }
@@ -265,15 +265,6 @@ public class DriveTrain {
                 setStatus(RUNNING);
                 Robot2017.imgProcReq = true;
                 Robot2017.ckLED.visionOn();
-                new Robot2017.DaemonThread(() -> {
-                    try {
-                        while (getStatus() == RUNNING) {
-                            Thread.sleep(50);
-                            Robot2017.imgProcReq = true;
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }).start();
                 new Robot2017.DaemonThread(() -> {
                     Timer.delay(0.25);
                     while (getStatus() == RUNNING) {
