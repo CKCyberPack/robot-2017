@@ -67,8 +67,9 @@ public class Robot2017 extends IterativeRobot {
 
         new DaemonThread(() -> {
             UsbCamera camera = new UsbCamera("USB Camera", 0);
-            camera.setExposureManual(RobotMap.cameraExposure);
             camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
+            camera.setExposureManual(RobotMap.cameraExposure);
+            camera.setFPS(30);
 
             CvSink cvSink = new CvSink("GRIP_Input");
             cvSink.setSource(camera);
@@ -79,10 +80,17 @@ public class Robot2017 extends IterativeRobot {
 
             List<MatOfPoint> tPoints;
 
+            Timer.delay(1);
+
             while (!Thread.interrupted()) {
                 cvSink.grabFrame(source);
+                if (source.empty()) {
+                    Timer.delay(0.1);
+                    continue;
+                }
                 long start = System.currentTimeMillis();
                 if (imgProcReq) {
+                    if (isDisabled()) imgProcReq = false;
                     points.clear();
                     pipeline.process(source);
                     tPoints = pipeline.findContoursOutput();
@@ -138,7 +146,12 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void disabledInit() {
-    	
+        if (runningThread != null) {
+            runningThread.cancel();
+            runningThread = null;
+        }
+        imgProcReq = false;
+        ckLED.visionOff();
     }
 
     @Override
@@ -346,13 +359,13 @@ public class Robot2017 extends IterativeRobot {
                         runningThread = ckDriveTrain.turn(-90);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, -90);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
                         runningThread = ckDriveTrain.turn(0);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 4, 0);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
                         ckDriveTrain.ckDrive.stopMotor();
@@ -363,13 +376,13 @@ public class Robot2017 extends IterativeRobot {
                         runningThread = ckDriveTrain.turn(90);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1, -90);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 90);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
                         runningThread = ckDriveTrain.turn(0);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 0);
+                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 4, 0);
                         runningThread.run();
                         while (runningThread.getStatus() == RUNNING);
                         ckDriveTrain.ckDrive.stopMotor();

@@ -273,8 +273,9 @@ public class DriveTrain {
                     }
                 }).start();
                 while (getStatus() == RUNNING) {
-                    double center = (RobotMap.cameraWidth / 2) + (30 * (Robot2017.left ? 1 : -1));
+                    double center = (RobotMap.cameraWidth / 2);
                     double turn = (Robot2017.mw < center ? 1D : -1D) * RobotMap.visionTurn;
+                    if (Math.abs(Robot2017.mw - center) < 15) turn = 0;
                     System.out.println(Robot2017.mw - center);
                     ckDrive.arcadeDrive(RobotMap.visionForward, turn);
                     Timer.delay(0.05);

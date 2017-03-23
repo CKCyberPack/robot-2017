@@ -49,7 +49,7 @@ public abstract class RobotMap {
     public static double encoderDistance = 6 * Math.PI / 360;
     public static double forwardSlowDistance = 60;
     public static double encoderStopSpeed = 1;
-    public static double gyroStraightKp = 0.045;
+    public static double gyroStraightKp = 0.065;
     public static double gyroStraightSpeed = 0.75;
     public static double gyroTurnKp = 0.03; //0.03
     public static double gyroTurnKi = 0.01; //0.007
@@ -58,10 +58,10 @@ public abstract class RobotMap {
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 2; //Number of degrees off by
     public static double gyroJitterAngle = 5;
-    public static double visionTurn = 0.45;
+    public static double visionTurn = 0.35;
     public static double visionForward = 0.6;
     public static double visionMaxG = 0.4;
     public static double visionBeginJitter = 60;
     public static double dumbTurn = 0.5;
-    public static double dumbTurnTolerance = 2;
+    public static double dumbTurnTolerance = 5;
 }
