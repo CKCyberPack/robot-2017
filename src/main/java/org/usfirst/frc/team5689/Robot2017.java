@@ -15,11 +15,10 @@ import java.util.List;
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
 public class Robot2017 extends IterativeRobot {
-    private final static String defaultAuto = "default";
+    private final static String centerGear = "center_gear";
     private final static String leftGear = "left_gear";
     private final static String rightGear = "right_gear";
-    private final static String centerGearLeft = "center_gear_left";
-    private final static String centerGearRight = "center_gear_right";
+    private final static String doNothing = "do_nothing";
     public static LED ckLED;
     public static boolean imgProcReq = false;
     public static Rect[] visionBiggest = new Rect[2];
@@ -47,11 +46,10 @@ public class Robot2017 extends IterativeRobot {
     public void robotInit() {
         //Create SmartDashboard Chooser
         chooser = new SendableChooser<>();
-        chooser.addDefault("Drive Straight", defaultAuto);
+        chooser.addDefault("Do Nothing", doNothing);
+        chooser.addObject("Center Gear", centerGear);
         chooser.addObject("Left Gear", leftGear);
         chooser.addObject("Right Gear", rightGear);
-        chooser.addObject("Center Gear Left", centerGearLeft);
-        chooser.addObject("Center Gear Right", centerGearRight);
         SmartDashboard.putData("Auto choices", chooser);
 
         //Subsystems
@@ -109,20 +107,12 @@ public class Robot2017 extends IterativeRobot {
                         if (visionBiggest[1] == null) {
                             visionBiggest[1] = visionBiggest[0];
                         }
-                        SmartDashboard.putNumber("Biggest X", visionBiggest[0].x);
-                        SmartDashboard.putNumber("Biggest Width", visionBiggest[0].width);
-                        SmartDashboard.putNumber("Biggest Area", visionBiggest[0].area());
-                        SmartDashboard.putNumber("Biggest2 X", visionBiggest[1].x);
-                        SmartDashboard.putNumber("Biggest2 Width", visionBiggest[1].width);
-                        SmartDashboard.putNumber("Biggest2 Area", visionBiggest[1].area());
                         mw = ((visionBiggest[0].width + visionBiggest[1].width) / 2);
                         mw += visionBiggest[0].x + visionBiggest[1].x;
                         mw /= 2;
                         left = visionBiggest[0].x < visionBiggest[1].x;
                         long end = System.currentTimeMillis();
-                        SmartDashboard.putNumber("Delta", end - start);
                     } else {
-                        System.out.println("Found no objects in process");
                     }
                 }
                 output = source;
@@ -174,13 +164,6 @@ public class Robot2017 extends IterativeRobot {
             ckLED.redOn();
             ckLED.blueOff();
         }
-        SmartDashboard.putNumber("Delta", 0);
-        SmartDashboard.putNumber("Biggest X", 0);
-        SmartDashboard.putNumber("Biggest Width", 0);
-        SmartDashboard.putNumber("Biggest Area", 0);
-        SmartDashboard.putNumber("Biggest2 X", 0);
-        SmartDashboard.putNumber("Biggest2 Width", 0);
-        SmartDashboard.putNumber("Biggest2 Area", 0);
     }
 
     @Override
@@ -283,7 +266,7 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void autonomousInit() {
-        autoSelected = chooser.getSelected();
+        autoSelected = SmartDashboard.getString("DB/String 0", "do_nothing");
         System.out.println("Auto selected: " + autoSelected);
         autoDone = false;
         if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
@@ -297,128 +280,92 @@ public class Robot2017 extends IterativeRobot {
 
     @Override
     public void autonomousPeriodic() {
-        SmartDashboard.putNumber("Distance", ckDriveTrain.ckEncoder.getDistance());
-        SmartDashboard.putNumber("Gyro", ckDriveTrain.ckNavX.getAngle());
-        SmartDashboard.putNumber("Current: LBack", ckPDP.getCurrent(RobotMap.pdpLeftBackDrive));
-        SmartDashboard.putNumber("Current: LFront", ckPDP.getCurrent(RobotMap.pdpLeftFrontDrive));
-        SmartDashboard.putNumber("Current: RBack", ckPDP.getCurrent(RobotMap.pdpRightBackDrive));
-        SmartDashboard.putNumber("Current: RFront", ckPDP.getCurrent(RobotMap.pdpRightFrontDrive));
-        SmartDashboard.putNumber("Current: Rope", ckPDP.getCurrent(RobotMap.pdpRopeMotor));
 
-        while (isAutonomous()) {
-            if (autoDone) {
-                Timer.delay(1);
-                return;
-            }
-            try {
-                switch (autoSelected) {
-                    case leftGear:
-                        ckDriveTrain.resetSensors();
-                        ckLED.visionOn();
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.2, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        runningThread = ckDriveTrain.dumbTurn(45);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        Timer.delay(0.3);
-                        gear();
-                        runningThread = ckDriveTrain.dumbTurn(0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 3.5, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        autoDone = true;
-                        break;
-                    case rightGear:
-                        ckDriveTrain.resetSensors();
-                        ckLED.visionOn();
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 1.2, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        runningThread = ckDriveTrain.dumbTurn(-45);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        Timer.delay(0.3);
-                        gear();
-                        runningThread = ckDriveTrain.dumbTurn(0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 3.5, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        autoDone = true;
-                        break;
-                    case centerGearLeft:
-                        gear();
-                        runningThread = ckDriveTrain.turn(-90);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, -90);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.turn(0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 4, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        autoDone = true;
-                        break;
-                    case centerGearRight:
-                        gear();
-                        runningThread = ckDriveTrain.turn(90);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 2, 90);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.turn(0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        runningThread = ckDriveTrain.timedGyroLock(RobotMap.visionForward, 4, 0);
-                        runningThread.run();
-                        while (runningThread.getStatus() == RUNNING);
-                        ckDriveTrain.ckDrive.stopMotor();
-                        autoDone = true;
-                        break;
-                    case defaultAuto:
-                    default:
-                        gear();
-                        ckDriveTrain.ckDrive.stopMotor();
-                        autoDone = true;
-                        break;
+        long end;
+        double error;
+        switch (autoSelected) {
+            case leftGear:
+                ckDriveTrain.resetSensors();
+                ckLED.visionOn();
+                end = System.currentTimeMillis() + 1000;
+                while (isAutonomous() && System.currentTimeMillis() < end) {
+                    ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
                 }
-
-            } catch (Exception e) {
-                System.err.println("Error in auto: " + e.getMessage());
-            }
+                if (!isAutonomous()) break;
+                ckDriveTrain.ckDrive.stopMotor();
+                dumbTurn(60);
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                gear();
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                dumbTurn(0);
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                end = System.currentTimeMillis() + 3500;
+                while (isAutonomous() && System.currentTimeMillis() < end) {
+                    ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
+                }
+                break;
+            case rightGear:
+                ckDriveTrain.resetSensors();
+                ckLED.visionOn();
+                end = System.currentTimeMillis() + 1000;
+                while (isAutonomous() && System.currentTimeMillis() < end) {
+                    ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
+                }
+                if (!isAutonomous()) break;
+                ckDriveTrain.ckDrive.stopMotor();
+                dumbTurn(-60);
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                gear();
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                dumbTurn(0);
+                ckDriveTrain.ckDrive.stopMotor();
+                if (!isAutonomous()) break;
+                end = System.currentTimeMillis() + 3500;
+                while (isAutonomous() && System.currentTimeMillis() < end) {
+                    ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
+                }
+                break;
+            case centerGear:
+                gear();
+                ckDriveTrain.ckDrive.stopMotor();
+                ckLED.visionOff();
+                break;
+            default:
+                break;
         }
+        ckDriveTrain.ckDrive.stopMotor();
+        ckLED.visionOff();
         imgProcReq = false;
+        while (isAutonomous()) ;
+    }
+
+    public void dumbTurn(double target) {
+        double error = target - ckDriveTrain.ckNavX.getAngle();
+        while (Math.abs(error - ckDriveTrain.ckNavX.getAngle()) > RobotMap.dumbTurnTolerance && isAutonomous()) {
+            boolean left = error < 0;
+            ckDriveTrain.ckDrive.arcadeDrive(0, (left ? 1D : -1D) * RobotMap.dumbTurn);
+            Timer.delay(0.05);
+            error = target - ckDriveTrain.ckNavX.getAngle();
+        }
     }
 
     private void gear() {
+        imgProcReq = true;
         runningThread = ckDriveTrain.driveVision();
-        runningThread.run();
-        while (runningThread.getStatus() == RUNNING);
-        if (runningThread.getStatus() != FINISHED) {
-            ckDriveTrain.ckDrive.stopMotor();
-            imgProcReq = false;
-            return;
-        }
+        runningThread.runSync();
+        ckDriveTrain.ckDrive.stopMotor();
+        imgProcReq = false;
         ckGearArm.firePiston();
         Timer.delay(0.25);
         ckDriveTrain.teleDrive(-RobotMap.visionForward, 0);
         Timer.delay(1);
         ckDriveTrain.ckDrive.stopMotor();
         ckGearArm.closePiston();
-        imgProcReq = false;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5689;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
 
@@ -86,8 +85,6 @@ public class DriveTrain {
                         if (maxX > RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
-                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
-                    SmartDashboard.putNumber("Turn Amount", turnAmount);
                 }
 
                 while (!ckEncoder.getStopped()) {
@@ -101,52 +98,6 @@ public class DriveTrain {
                         if (maxX > RobotMap.maxCollisionG) collision = true;
                     }
                     Timer.delay(0.05);
-                    SmartDashboard.putNumber("Gyro", ckNavX.getAngle());
-                    SmartDashboard.putNumber("Turn Amount", turnAmount);
-                }
-
-                ckDrive.stopMotor();
-                setStatus(isCancelled() ? CANCELLED : collision ? DEAD : FINISHED);
-            }
-        };
-    }
-
-    public DriveRunnable driveForwardCheckCollision(double distance) {
-        return drive(distance, true);
-    }
-
-    public DriveRunnable driveToGear(){
-        return new DriveRunnable() {
-            double maxX;
-            double targetAngle;
-
-            private void readNav() {
-                if (ckRioAcc.getX() > maxX) {
-                    maxX = ckRioAcc.getX();
-                }
-            }
-
-            public void run() {
-                setStatus(Status.RUNNING);
-                boolean collision = false;
-                targetAngle = RobotMap.gyroJitterAngle;
-                double turnAmount = 1;
-
-                while (!isCancelled() && !collision) {
-                    if (ckNavX.getAngle() > targetAngle){
-                        targetAngle = -1 * RobotMap.gyroJitterAngle;
-                        turnAmount = 75;
-                    }else if (ckNavX.getAngle() < targetAngle){
-                        targetAngle = RobotMap.gyroJitterAngle;
-                        turnAmount = -75;
-                    }
-
-                    ckDrive.arcadeDrive(.5, turnAmount);
-                    readNav();
-                    if (maxX > RobotMap.maxCollisionG) collision = true;
-
-                    Timer.delay(0.05);
-                    SmartDashboard.putNumber("Target Angle", targetAngle);
                 }
 
                 ckDrive.stopMotor();
@@ -183,9 +134,6 @@ public class DriveTrain {
                     double derivative = error - previousError;
                     previousError = error;
 
-                    //SmartDashboard.putNumber("P", error);
-                    //SmartDashboard.putNumber("I", integral);
-                    //SmartDashboard.putNumber("D", derivative);
                     double turnAmount = RobotMap.gyroTurnKp * error + RobotMap.gyroTurnKi * integral + RobotMap.gyroTurnKd * derivative;
 
                     if (turnAmount > RobotMap.gyroTurnMax) {
@@ -193,7 +141,6 @@ public class DriveTrain {
                     } else if (turnAmount < RobotMap.gyroTurnMin) {
                         turnAmount = RobotMap.gyroTurnMin;
                     }
-                    SmartDashboard.putNumber("Turn Amount", turnAmount);
 
                     ckDrive.arcadeDrive(0, -turnAmount);
                     if (!reached) {
@@ -265,6 +212,7 @@ public class DriveTrain {
                 setStatus(RUNNING);
                 Robot2017.imgProcReq = true;
                 Robot2017.ckLED.visionOn();
+                long end = System.currentTimeMillis() + 5000;
                 new Robot2017.DaemonThread(() -> {
                     Timer.delay(0.25);
                     while (getStatus() == RUNNING) {
@@ -272,16 +220,15 @@ public class DriveTrain {
                         Timer.delay(0.05);
                     }
                 }).start();
-                while (getStatus() == RUNNING) {
+                while (getStatus() == RUNNING && System.currentTimeMillis() < end) {
                     double center = (RobotMap.cameraWidth / 2);
                     double turn = (Robot2017.mw < center ? 1D : -1D) * RobotMap.visionTurn;
                     if (Math.abs(Robot2017.mw - center) < 15) turn = 0;
-                    System.out.println(Robot2017.mw - center);
                     ckDrive.arcadeDrive(RobotMap.visionForward, turn);
                     Timer.delay(0.05);
-                    SmartDashboard.putNumber("MaxG", maxX);
                     if (maxX > RobotMap.visionMaxG) setStatus(FINISHED);
                 }
+                setStatus(FINISHED);
                 Robot2017.ckLED.visionOff();
                 Robot2017.imgProcReq = false;
             }
