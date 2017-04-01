@@ -24,6 +24,8 @@ public class Robot2017 extends IterativeRobot {
     public static Rect[] visionBiggest = new Rect[2];
     public static double mw = 0;
     public static boolean left = false;
+    DriveTrain drive;
+    ADXRS450_Gyro gyro;
     //Autonomous Selector
     private String autoSelected;
     private SendableChooser<String> chooser;
@@ -156,7 +158,7 @@ public class Robot2017 extends IterativeRobot {
     	}
     	ckLED.visionOff();
     	imgProcReq = false;
-    	
+
         if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
             ckLED.blueOn();
             ckLED.redOff();
@@ -287,7 +289,7 @@ public class Robot2017 extends IterativeRobot {
             case leftGear:
                 ckDriveTrain.resetSensors();
                 ckLED.visionOn();
-                end = System.currentTimeMillis() + 1000;
+                end = System.currentTimeMillis() + 1450;
                 while (isAutonomous() && System.currentTimeMillis() < end) {
                     ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
                 }
@@ -310,7 +312,7 @@ public class Robot2017 extends IterativeRobot {
             case rightGear:
                 ckDriveTrain.resetSensors();
                 ckLED.visionOn();
-                end = System.currentTimeMillis() + 1000;
+                end = System.currentTimeMillis() + 1450;
                 while (isAutonomous() && System.currentTimeMillis() < end) {
                     ckDriveTrain.ckDrive.arcadeDrive(RobotMap.visionForward, 0);
                 }
@@ -341,7 +343,9 @@ public class Robot2017 extends IterativeRobot {
         ckDriveTrain.ckDrive.stopMotor();
         ckLED.visionOff();
         imgProcReq = false;
-        while (isAutonomous()) ;
+        while (isAutonomous()) {
+            Timer.delay(0.1);
+        }
     }
 
     public void dumbTurn(double target) {

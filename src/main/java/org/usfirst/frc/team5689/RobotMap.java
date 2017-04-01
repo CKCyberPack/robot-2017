@@ -58,10 +58,10 @@ public abstract class RobotMap {
     public static double gyroTurnMin = -gyroTurnMax;
     public static double gyroTolerance = 2; //Number of degrees off by
     public static double gyroJitterAngle = 5;
-    public static double visionTurn = 0.65;
+    public static double visionTurn = 0.55;
     public static double visionForward = 0.6;
     public static double visionMaxG = 0.4;
     public static double visionBeginJitter = 60;
-    public static double dumbTurn = 0.65;
+    public static double dumbTurn = 0.62;
     public static double dumbTurnTolerance = 5;
 }
