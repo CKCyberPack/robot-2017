@@ -2,8 +2,6 @@ package org.usfirst.frc.team5689;
 
 import edu.wpi.first.wpilibj.*;
 
-import static org.usfirst.frc.team5689.DriveRunnable.Status.*;
-
 public class Robot2017 extends IterativeRobot {
 
     RobotDrive drive;
