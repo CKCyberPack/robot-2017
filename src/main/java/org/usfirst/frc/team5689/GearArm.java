@@ -11,7 +11,7 @@ public class GearArm {
 
     public void firePiston(){
       armPiston.set(true);
-    };
+    }
 
     public void closePiston(){
         armPiston.set(false);

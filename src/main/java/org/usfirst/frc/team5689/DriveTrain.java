@@ -25,8 +25,8 @@ public class DriveTrain {
         ckEncoder.setDistancePerPulse(RobotMap.encoderDistance);
         ckEncoder.setReverseDirection(true);
         ckEncoder.setMinRate(RobotMap.encoderStopSpeed);
-        ckNavX = new ADXRS450_Gyro();
-        ckRioAcc = new BuiltInAccelerometer();
+//        ckNavX = new ADXRS450_Gyro();
+//        ckRioAcc = new BuiltInAccelerometer();
 //        if (!ckNavX.isConnected()){
 //
 //        }

@@ -1,13 +1,13 @@
 package org.usfirst.frc.team5689;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
+//import edu.wpi.cscore.CvSink;
+//import edu.wpi.cscore.CvSource;
+//import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.opencv.core.*;
-import org.opencv.imgproc.Imgproc;
+//import org.opencv.core.*;
+//import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Robot2017 extends IterativeRobot {
     private final static String doNothing = "do_nothing";
     public static LED ckLED;
     public static boolean imgProcReq = false;
-    public static Rect[] visionBiggest = new Rect[2];
+   // public static Rect[] visionBiggest = new Rect[2];
     public static double mw = 0;
     public static boolean left = false;
     DriveTrain drive;
@@ -35,8 +35,8 @@ public class Robot2017 extends IterativeRobot {
     private RopeLift ckRopeLift;
     private GearArm ckGearArm;
     private PowerDistributionPanel ckPDP;
-    private GripPipeline pipeline;
-    private List<Rect> points = new ArrayList<>();
+   // private GripPipeline pipeline;
+  //  private List<Rect> points = new ArrayList<>();
     //Variables
     private DriveRunnable runningThread = null;
     private boolean overrideSafety = false;
@@ -62,74 +62,75 @@ public class Robot2017 extends IterativeRobot {
         ckLED = new LED();
         ckPDP = new PowerDistributionPanel();
 
-        pipeline = new GripPipeline();
+       // pipeline = new GripPipeline();
 
 
-        new DaemonThread(() -> {
-            UsbCamera camera = new UsbCamera("USB Camera", 0);
-            camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
-            camera.setExposureManual(RobotMap.cameraExposure);
-            camera.setFPS(30);
-
-            CvSink cvSink = new CvSink("GRIP_Input");
-            cvSink.setSource(camera);
-            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", RobotMap.cameraWidth,  RobotMap.cameraHeight);
-
-            Mat source = new Mat();
-            Mat output = new Mat();
-
-            List<MatOfPoint> tPoints;
-
-            Timer.delay(1);
-
-            while (!Thread.interrupted()) {
-                cvSink.grabFrame(source);
-                if (source.empty()) {
-                    Timer.delay(0.1);
-                    continue;
-                }
-                long start = System.currentTimeMillis();
-                if (imgProcReq) {
-                    if (isDisabled()) imgProcReq = false;
-                    points.clear();
-                    pipeline.process(source);
-                    tPoints = pipeline.findContoursOutput();
-                    tPoints.forEach(p -> points.add(Imgproc.boundingRect(p)));
-                    visionBiggest[0] = null;
-                    visionBiggest[1] = null;
-                    points.forEach(p -> {
-                        if (visionBiggest[0] == null || p.area() > visionBiggest[0].area()) {
-                            visionBiggest[1] = visionBiggest[0];
-                            visionBiggest[0] = p;
-                        } else if (visionBiggest[1] == null || p.area() > visionBiggest[1].area()) {
-                            visionBiggest[1] = p;
-                        }
-                    });
-                    if (visionBiggest[0] != null) {
-                        if (visionBiggest[1] == null) {
-                            visionBiggest[1] = visionBiggest[0];
-                        }
-                        mw = ((visionBiggest[0].width + visionBiggest[1].width) / 2);
-                        mw += visionBiggest[0].x + visionBiggest[1].x;
-                        mw /= 2;
-                        left = visionBiggest[0].x < visionBiggest[1].x;
-                        long end = System.currentTimeMillis();
-                    } else {
-                    }
-                }
-                output = source;
-                if (visionBiggest[1] != null) {
-                    Imgproc.rectangle(output, new Point(visionBiggest[0].x, visionBiggest[0].y), new Point(visionBiggest[0].x + visionBiggest[0].width, visionBiggest[0].y + visionBiggest[0].height), new Scalar(255, 0, 255));
-                    Imgproc.rectangle(output, new Point(visionBiggest[1].x, visionBiggest[1].y), new Point(visionBiggest[1].x + visionBiggest[1].width, visionBiggest[1].y + visionBiggest[1].height), new Scalar(255, 0, 255));
-                }
-                outputStream.putFrame(output);
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        //Camera stuff
+//        new DaemonThread(() -> {
+//            UsbCamera camera = new UsbCamera("USB Camera", 0);
+//            camera.setResolution(RobotMap.cameraWidth, RobotMap.cameraHeight);
+//            camera.setExposureManual(RobotMap.cameraExposure);
+//            camera.setFPS(30);
+//
+//            CvSink cvSink = new CvSink("GRIP_Input");
+//            cvSink.setSource(camera);
+//            CvSource outputStream = CameraServer.getInstance().putVideo("GRIP_Output", RobotMap.cameraWidth,  RobotMap.cameraHeight);
+//
+//            Mat source = new Mat();
+//            Mat output = new Mat();
+//
+//            List<MatOfPoint> tPoints;
+//
+//            Timer.delay(1);
+//
+//            while (!Thread.interrupted()) {
+//                cvSink.grabFrame(source);
+//                if (source.empty()) {
+//                    Timer.delay(0.1);
+//                    continue;
+//                }
+//                long start = System.currentTimeMillis();
+//                if (imgProcReq) {
+//                    if (isDisabled()) imgProcReq = false;
+//                    points.clear();
+//                  //  pipeline.process(source);
+//                   // tPoints = pipeline.findContoursOutput();
+//                  //  tPoints.forEach(p -> points.add(Imgproc.boundingRect(p)));
+//                    visionBiggest[0] = null;
+//                    visionBiggest[1] = null;
+//                    points.forEach(p -> {
+//                        if (visionBiggest[0] == null || p.area() > visionBiggest[0].area()) {
+//                            visionBiggest[1] = visionBiggest[0];
+//                            visionBiggest[0] = p;
+//                        } else if (visionBiggest[1] == null || p.area() > visionBiggest[1].area()) {
+//                            visionBiggest[1] = p;
+//                        }
+//                    });
+//                    if (visionBiggest[0] != null) {
+//                        if (visionBiggest[1] == null) {
+//                            visionBiggest[1] = visionBiggest[0];
+//                        }
+//                        mw = ((visionBiggest[0].width + visionBiggest[1].width) / 2);
+//                        mw += visionBiggest[0].x + visionBiggest[1].x;
+//                        mw /= 2;
+//                        left = visionBiggest[0].x < visionBiggest[1].x;
+//                        long end = System.currentTimeMillis();
+//                    } else {
+//                    }
+//                }
+//                output = source;
+//                if (visionBiggest[1] != null) {
+//                    Imgproc.rectangle(output, new Point(visionBiggest[0].x, visionBiggest[0].y), new Point(visionBiggest[0].x + visionBiggest[0].width, visionBiggest[0].y + visionBiggest[0].height), new Scalar(255, 0, 255));
+//                    Imgproc.rectangle(output, new Point(visionBiggest[1].x, visionBiggest[1].y), new Point(visionBiggest[1].x + visionBiggest[1].width, visionBiggest[1].y + visionBiggest[1].height), new Scalar(255, 0, 255));
+//                }
+//                outputStream.putFrame(output);
+//                try {
+//                    Thread.sleep(30);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Override
